@@ -7,16 +7,21 @@ import PaginationNumeric from "../../components/partials/PaginationNumeric";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { PrismaClient } from "@prisma/client";
 
-export default function Spaces({ checkuser }: any) {
+export default function Spaces({ checkuser, allSpaces }: any) {
   //initializing the state variables
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const filteredSpaces = "";
+  const totalItems = allSpaces.length;
 
   //functions
+  const filteredSpaces = allSpaces.filter((space: any) => {
+    return space.name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   const handleClick = () => {
     setIsModalOpen(true);
   };
+  
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -99,7 +104,7 @@ export default function Spaces({ checkuser }: any) {
                 {/* Jobs header */}
                 <div className="flex justify-between items-center mb-4">
                   <div className="text-sm text-slate-500 italic">
-                    {/* Showing {totalItems} spaces */}
+                    Showing {totalItems} spaces
                   </div>
                   {/* Sort */}
                   <div className="text-sm"></div>
@@ -151,6 +156,7 @@ export async function getServerSideProps(context: any) {
   }
 
   //get all spaces from database using prisma
+
   const allSpaces = await prisma.space.findMany({
     select: {
       id: true,
@@ -163,11 +169,10 @@ export async function getServerSideProps(context: any) {
     },
   });
 
-  console.log(allSpaces);
-
   return {
     props: {
       checkuser: session,
+      allSpaces: allSpaces,
     },
   };
 }

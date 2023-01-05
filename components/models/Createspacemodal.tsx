@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import Modal from "react-modal";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 const Createspacemodal = ({ isOpen, onRequestClose }: any) => {
   const [name, setName] = useState("");
-
   const router = useRouter();
-
   const session = useSession();
 
   const customStyles = {
@@ -26,7 +25,7 @@ const Createspacemodal = ({ isOpen, onRequestClose }: any) => {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     try {
-      const response = await fetch("api/spaces/createspace", {
+      const response = await fetch("api/spaces/createSpace", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,9 +33,15 @@ const Createspacemodal = ({ isOpen, onRequestClose }: any) => {
         body: JSON.stringify(name),
       });
       const data = await response.json();
-      console.log(data);
-      router.reload();
-      return ;
+      if (data.error) {
+        toast.error(data.error);
+        return;
+      }
+      if (data.success == true) {
+        toast.success("Space created successfully");
+        router.reload();
+        return;
+      }
     } catch (error) {
       console.error(error);
     }
