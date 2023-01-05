@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useSession, getSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 
-export default function Mainsite() {
+export default function Mainsite({ userdata }: any) {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
@@ -152,7 +152,7 @@ export default function Mainsite() {
 
               <div className="max-w-sm mx-auto px-4 py-8">
                 <h1 className="text-3xl text-slate-800 font-bold mb-6">
-                  Welcome to IsNEXTAI! ✨
+                  Welcome to IsNEXTAI! {userdata.user.name} ✨
                 </h1>
                 {/* CTA */}
                 <div className="my-4">
@@ -175,4 +175,14 @@ export default function Mainsite() {
       </main>
     );
   }
+}
+
+export async function getServerSideProps(context: any) {
+  const session = await getSession(context);
+
+  return {
+    props: {
+      userdata: session,
+    },
+  };
 }
