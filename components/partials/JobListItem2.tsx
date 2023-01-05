@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -12,7 +13,7 @@ function JobListItem(props: any) {
     const spacename: any = document.getElementById(`spacename${id}`);
     const spacenameinp: any = document.getElementById(`spacenameinp${id}`);
     try {
-      const res = await fetch(`/api/spaces/editspacename/${id}`, {
+      const res = await fetch(`/api/genration/editspacename/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -54,7 +55,7 @@ function JobListItem(props: any) {
 
   const marksaveSpace = async (id: any) => {
     try {
-      const res = await fetch(`/api/spaces/makesaved/${id}`, {
+      const res = await fetch(`/api/genration/markassaved/${id}`, {
         method: "PUT",
       });
       const data = await res.json();
@@ -109,7 +110,7 @@ function JobListItem(props: any) {
       return;
     }
     try {
-      const res = await fetch(`/api/spaces/deletecopytool/${id}`, {
+      const res = await fetch(`/api/genration/deletegen/${id}`, {
         method: "DELETE",
       });
       console.log(res);
