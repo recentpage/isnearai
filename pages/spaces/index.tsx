@@ -21,7 +21,7 @@ export default function Spaces({ checkuser, allSpaces }: any) {
   const handleClick = () => {
     setIsModalOpen(true);
   };
-  
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -119,7 +119,7 @@ export default function Spaces({ checkuser, allSpaces }: any) {
                         id={fields.id}
                         image={"/company-icon-01.svg"}
                         name={fields.name}
-                        link="spaces/space"
+                        link="spaces/genrations/"
                         company=""
                         date={fields.date}
                         type={fields.type}

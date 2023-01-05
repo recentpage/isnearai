@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -7,7 +8,7 @@ function JobListItem(props: any) {
   const router = useRouter();
   const selectSpace = async (id: any) => {
     try {
-      const res = await fetch(`/api/spaces/select/${id}`, {
+      const res = await fetch(`/api/spaces/selectSpace/${id}`, {
         method: "GET",
       });
 
@@ -30,7 +31,7 @@ function JobListItem(props: any) {
       return;
     }
     try {
-      const res = await fetch(`/api/spaces/${id}`, {
+      const res = await fetch(`/api/spaces/deleteSpace/${id}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -83,7 +84,7 @@ function JobListItem(props: any) {
           <div>
             <Link
               className="inline-flex font-semibold text-slate-800"
-              href={props.link+"/"+props.id}
+              href={props.link + props.id}
             >
               {props.name}
             </Link>

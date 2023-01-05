@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useSession } from "next-auth/react";
 import Modal from "react-modal";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
@@ -7,7 +6,6 @@ import { toast } from "react-toastify";
 const Createspacemodal = ({ isOpen, onRequestClose }: any) => {
   const [name, setName] = useState("");
   const router = useRouter();
-  const session = useSession();
 
   const customStyles = {
     content: {
