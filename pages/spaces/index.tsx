@@ -5,6 +5,7 @@ import Header from "../../components/Navbar/Header";
 import JobListItem from "../../components/partials/JobListItem";
 import PaginationNumeric from "../../components/partials/PaginationNumeric";
 import Sidebar from "../../components/Sidebar/Sidebar";
+import { PrismaClient } from "@prisma/client";
 
 export default function Spaces({ checkuser }: any) {
   //initializing the state variables
@@ -137,6 +138,7 @@ export default function Spaces({ checkuser }: any) {
 }
 
 export async function getServerSideProps(context: any) {
+  const prisma = new PrismaClient();
   const session = await getSession(context);
 
   if (!session) {
@@ -148,8 +150,20 @@ export async function getServerSideProps(context: any) {
     };
   }
 
-  //get all spaces
-  
+  //get all spaces from database using prisma
+  const allSpaces = await prisma.space.findMany({
+    select: {
+      id: true,
+      name: true,
+      selected: true,
+    },
+    where: {
+      //@ts-ignore
+      userId: session.user?.id,
+    },
+  });
+
+  console.log(allSpaces);
 
   return {
     props: {

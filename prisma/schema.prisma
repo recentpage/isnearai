@@ -42,6 +42,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    Space         Space[]
 }
 
 model VerificationToken {
@@ -50,4 +51,15 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Space {
+    id        String   @id @default(cuid())
+    name      String
+    userId    String
+    selected  String?  @default("false")
+    slug      String?  @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
