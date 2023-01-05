@@ -35,14 +35,17 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    Space         Space[]
+    id                 String               @id @default(cuid())
+    name               String?
+    email              String?              @unique
+    emailVerified      DateTime?
+    image              String?
+    accounts           Account[]
+    sessions           Session[]
+    Space              Space[]
+    Tools              Tools[]
+    Toolgen            Toolgen[]
+    Productdescription Productdescription[]
 }
 
 model VerificationToken {
@@ -54,12 +57,65 @@ model VerificationToken {
 }
 
 model Space {
-    id        String   @id @default(cuid())
+    id        String    @id @default(cuid())
     name      String
     userId    String
-    selected  String?  @default("false")
-    slug      String?  @unique
+    selected  String?   @default("false")
+    slug      String?   @unique
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    Toolgen   Toolgen[]
+}
+
+model Tools {
+    id          String    @id @default(cuid())
+    name        String?
+    description String?
+    slug        String?
+    category    String?
+    status      String?
+    imageUrl    String?
+    model       String?
+    userId      String
+    createdAt   DateTime  @default(now())
+    user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    Toolgen     Toolgen[]
+}
+
+model Toolgen {
+    id                 String               @id @default(cuid())
+    title              String?
+    slug               String?
+    isSaved            String?              @default("false")
+    toolId             String
+    spaceId            String
+    userId             String
+    createdAt          DateTime             @default(now())
+    tool               Tools                @relation(fields: [toolId], references: [id], onDelete: Cascade)
+    space              Space                @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+    user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+    Copygen            Copygen[]
+    Productdescription Productdescription[]
+}
+
+model Copygen {
+    id        String   @id @default(cuid())
+    text      String?
+    isSaved   String?  @default("false")
+    toolgenId String
     createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    toolgen   Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
+}
+
+model Productdescription {
+    id                     Int      @id @default(autoincrement())
+    productname            String?
+    productcharacteristics String?
+    toneofvoice            String?
+    toolgenId              String   @unique
+    userId                 String
+    createdAt              DateTime @default(now())
+    toolgen                Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
+    user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
