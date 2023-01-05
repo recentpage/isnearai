@@ -9,8 +9,10 @@ export default async function getSug(req: any, res: any, toolid: any) {
   if (!session) {
     res.status(401).json({ error: "Unauthorized" });
   }
+  const toolsset = "productdescription";
+
   if (toolid && toolid !== "undefined") {
-    if (toolid == 1) {
+    if (toolsset === "productdescription") {
       const getSug = await prisma.tools.findMany({
         where: {
           id: toolid,
@@ -19,6 +21,7 @@ export default async function getSug(req: any, res: any, toolid: any) {
           slug: true,
         },
       });
+
       return getSug[0].slug;
     }
   }
