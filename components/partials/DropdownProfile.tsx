@@ -7,6 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 function DropdownProfile({ align }: any) {
   const session = useSession();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [avatar, setAvatar] = useState(session.data?.user?.image as string);
 
   const trigger: any = useRef(null);
   const dropdown: any = useRef(null);
@@ -48,7 +49,7 @@ function DropdownProfile({ align }: any) {
       >
         <Image
           className="w-8 h-8 rounded-full"
-          src="/user-avatar-32.png"
+          src={avatar}
           width="32"
           height="32"
           alt="User"

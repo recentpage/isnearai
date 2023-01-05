@@ -3,7 +3,7 @@ import SearchModal from "../partials/ModalSearch";
 import UserMenu from "../partials/DropdownProfile";
 
 export default function Header({ sidebarOpen, setSidebarOpen }: any) {
-  const [searchModalOpen, setSearchModalOpen] = useState(false)
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
   return (
     <header className="sticky top-0 bg-white border-b border-slate-200 z-30">
       <div className="px-4 sm:px-6 lg:px-8">
