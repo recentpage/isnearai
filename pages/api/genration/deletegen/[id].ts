@@ -16,7 +16,7 @@ export default async function handler(
   if (session) {
     const tool = await prisma.toolgen.delete({
       where: {
-        id: Number(id),
+        id: id as string,
       },
     });
     res.json({ status: "success" });
