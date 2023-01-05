@@ -15,13 +15,14 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   //@ts-ignore
   const userId = session.user?.id;
+  const toolId = "clciuj3v40000v6z4s02cdcrb";
   const { proid, toneofvoice, productname, productcharacteristics } = req.body;
 
   //get space id from pages/api/checkspace.ts import
   const spaceId = await checkSpace(userId);
 
   //get slug from pages/api/getslug.ts import
-  const slug = await getSug(req, res, 1);
+  const slug = await getSug(req, res, toolId);
   //remove this last /blank from slug and
   const makenewsug = slug?.split("/");
   const newSlug = makenewsug?.slice(0, makenewsug.length - 1).join("/");
@@ -42,6 +43,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     if (response.status === 200) {
+  
       let text = response.data.choices[0].text;
       console.log(text);
       // split the text into 3 variations by \n
@@ -60,11 +62,12 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
       let status = "";
       let act = "";
       let proidnew = "";
+
       if (proid === "blank") {
         const toolgen: any = await prisma.toolgen.create({
           data: {
             title: "Untitled",
-            toolId: "1",
+            toolId: toolId,
             spaceId: spaceId,
             userId: userId,
           },

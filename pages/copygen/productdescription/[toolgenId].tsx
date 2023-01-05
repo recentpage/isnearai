@@ -1,6 +1,6 @@
 import { getSession } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PrismaClient } from "@prisma/client";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
@@ -20,10 +20,22 @@ export default function Copygen({
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState("");
 
+  //use effect
+  useEffect(() => {
+    if (toolgen != null && toolgen[0].title != null && toolgen.length > 0) {
+      setDoctitle(toolgen[0].title);
+    }
+    if (productdescription != null && productdescription.length > 0) {
+      setProductname(productdescription[0].productname);
+      setProductcharacteristics(productdescription[0].productcharacteristics);
+      setToneofvoice(productdescription[0].toneofvoice);
+    }
+  }, [productdescription, toolgen]);
+
   // handle doc title
   const handletitle = async (event: any) => {
     // save title to db using api
-    const proid = router.query.proid;
+    const proid = router.query.toolgenId;
     if (proid == "blank") {
       toast("Please Genrate Product Description First", {
         hideProgressBar: true,
@@ -61,7 +73,7 @@ export default function Copygen({
     setLoading(true);
     event.preventDefault();
     try {
-      const proid = router.query.proid;
+      const proid = router.query.toolgenId;
       const productname = event.target.productname.value;
       const productcharacteristics = event.target.productcharacteristics.value;
       const toneofvoice = event.target.toneofvoice.value;
@@ -169,7 +181,7 @@ export default function Copygen({
       return;
     }
     const copy = edit;
-    const proid = router.query.proid;
+    const proid = router.query.toolgenId;
     if (edit) {
       const response = await fetch("/api/getcopy/productdescription/editcopy", {
         method: "POST",
@@ -345,14 +357,14 @@ export default function Copygen({
                       <textarea
                         id="productcharacteristics"
                         name="productcharacteristics"
-                        value={productcharacteristics}
+                        defaultValue={productcharacteristics}
                         className="form-input w-full"
                         rows={4}
                         cols={4}
                         onChange={(e) =>
                           setProductcharacteristics(e.target.value)
                         }
-                      />
+                      ></textarea>
                     </div>
                     <div>
                       <label

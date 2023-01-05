@@ -109,7 +109,7 @@ model Copygen {
 }
 
 model Productdescription {
-    id                     Int      @id @default(autoincrement())
+    id                     String   @id @default(cuid())
     productname            String?
     productcharacteristics String?
     toneofvoice            String?
