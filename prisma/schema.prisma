@@ -40,6 +40,8 @@ model User {
     email              String?              @unique
     emailVerified      DateTime?
     image              String?
+    stripeId           String?              @unique
+    isSubscribed       String?              @default("false")
     accounts           Account[]
     sessions           Session[]
     Space              Space[]
