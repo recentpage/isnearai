@@ -39,11 +39,20 @@ export default NextAuth({
   },
   callbacks: {
     async session({ session, token }) {
+      // get stripe customer id issubscribed and interval from db
+      const userget = await prisma.user.findUnique({
+        where: {
+          id: token?.sub,
+        },
+      });
       session = {
         ...session,
         user: {
           ...session.user,
           id: token?.sub,
+          stripeId: userget?.stripeId,
+          isSubscribed: userget?.isSubscribed,
+          interval: userget?.interval,
         } as User,
       };
       return session;
