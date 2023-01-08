@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
+import customerhandler from "../customer";
 
 // Create a new interface for the user
 interface User {
@@ -25,6 +26,17 @@ export default NextAuth({
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
+  events: {
+    async signIn(message) {
+      if (message.isNewUser === true) {
+        const userid = message.user?.id;
+        if (!userid) return;
+        if (userid) {
+          const customers = customerhandler(userid);
+        }
+      }
+    },
+  },
   callbacks: {
     async session({ session, token }) {
       session = {
