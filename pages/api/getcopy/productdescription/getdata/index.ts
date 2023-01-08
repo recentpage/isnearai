@@ -14,7 +14,7 @@ export default async function handler(
     if (req.method === "POST" && id) {
       const copy = await prisma.copygen.findMany({
         where: {
-          toolgenId: parseInt(id),
+          toolgenId: id,
         },
       });
       console.log("copy", copy);
