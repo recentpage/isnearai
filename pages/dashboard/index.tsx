@@ -10,20 +10,26 @@ export default function Dashoard({ sortedPlans }: { sortedPlans: any }) {
   const session = useSession();
   console.log(session);
   console.log(sortedPlans);
-  return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar />
-      <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-        <Header />
-        <main>
-          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
-            <Welcomeuser />
-            <Pricing plans={sortedPlans} session={session} />
-          </div>
-        </main>
+  if (session.status === "loading") return null;
+  if (session.status === "unauthenticated") {
+    //redirect to login page
+    window.location.href = "/";
+  } else if (session.status === "authenticated") {
+    return (
+      <div className="flex h-screen overflow-hidden">
+        <Sidebar />
+        <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+          <Header />
+          <main>
+            <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+              <Welcomeuser />
+              <Pricing plans={sortedPlans} session={session} />
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export const getStaticProps = async () => {

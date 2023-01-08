@@ -21,22 +21,59 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let event: any;
 
   try {
-    const event = stripe.webhooks.constructEvent(buf, sig, signingSecret);
+    event = stripe.webhooks.constructEvent(buf, sig, signingSecret);
   } catch (err: any) {
     console.log("Error", err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
+  console.log(event.type);
+
   switch (event.type) {
     case "customer.subscription.created":
-      prisma.user.update({
-        where: {
-          stripeId: event.data.object.customer,
-        },
-        data: {
-          isSubscribed: "true",
-        },
-      });
+      const useraa = prisma.user
+        .update({
+          where: {
+            stripeId: event.data.object.customer,
+          },
+          data: {
+            isSubscribed: "true",
+            interval: event.data.object.plan.interval,
+          },
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      break;
+    case "customer.subscription.deleted":
+      const user = prisma.user
+        .update({
+          where: {
+            stripeId: event.data.object.customer,
+          },
+          data: {
+            isSubscribed: "false",
+            interval: null,
+          },
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      break;
+    case "customer.subscription.updated":
+      const usera = prisma.user
+        .update({
+          where: {
+            stripeId: event.data.object.customer,
+          },
+          data: {
+            isSubscribed: "true",
+            interval: event.data.object.plan.interval,
+          },
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       break;
     default:
       console.log(`Unhandled event type ${event.type}`);

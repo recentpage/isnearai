@@ -18,7 +18,7 @@ export default function Pricing({
   const [plan3, setPlan3] = useState("");
   const [priceid3, setPriceid3] = useState("");
   const [intervalok3, setIntervalok3] = useState("");
-  const [isSubscribed, setIsSubscribed] = useState(session?.user?.isSubscribed);
+  const [isSubscribed, setIsSubscribed] = useState("false");
 
   const prprocessSubscription = async (planId: any) => {
     const res = await fetch(`/api/subscription/${planId}`, {
@@ -37,6 +37,11 @@ export default function Pricing({
   };
 
   useEffect(() => {
+    if (session) {
+      if (session.data?.user?.isSubscribed === "true") {
+        setIsSubscribed("true");
+      }
+    }
     if (annual === true) {
       plans.map((plan: any) => {
         if (plan.id === "price_1MOeBVSFU8Udq9IAUs1A2yH8") {
@@ -74,7 +79,7 @@ export default function Pricing({
         }
       });
     }
-  }, [annual, plans]);
+  }, [annual, plans, session]);
 
   return (
     <div className="grow">
@@ -155,7 +160,9 @@ export default function Pricing({
                     }}
                     className="btn font-bold bg-indigo-500 hover:bg-indigo-600 text-white w-full"
                   >
-                    {isSubscribed ? "Manage Subscription" : "Select Plan"}
+                    {isSubscribed == "true"
+                      ? "Manage Subscription"
+                      : "Select Plan"}
                   </button>
                 </div>
                 <div className="px-5 pt-4 pb-5">
@@ -244,7 +251,9 @@ export default function Pricing({
                     className="btn font-bold bg-indigo-500 hover:bg-indigo-600 text-white w-full"
                   >
                     <span>
-                      {isSubscribed ? "Manage Subscription" : "Select Plan"}
+                      {isSubscribed == "true"
+                        ? "Manage Subscription"
+                        : "Select Plan"}
                     </span>
                   </button>
                 </div>
@@ -341,7 +350,9 @@ export default function Pricing({
                     className="btn font-bold bg-indigo-500 hover:bg-indigo-600 text-white w-full"
                   >
                     <span>
-                      {isSubscribed ? "Manage Subscription" : "Select Plan"}
+                      {isSubscribed == "true"
+                        ? "Manage Subscription"
+                        : "Select Plan"}
                     </span>
                   </button>
                 </div>
