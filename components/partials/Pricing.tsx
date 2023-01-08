@@ -9,7 +9,9 @@ export default function Pricing() {
         {/* Plans */}
         <section>
           <div className="mb-12">
-            <h2 className="text-2xl text-slate-800 font-bold mb-4">Upgrade Package</h2>
+            <h2 className="text-2xl text-slate-800 font-bold mb-4">
+              Upgrade Package
+            </h2>
           </div>
 
           {/* Pricing */}
@@ -89,7 +91,7 @@ export default function Pricing() {
                       >
                         <path d="M10.28 1.28L3.989 7.575 1.695 5.28A1 1 0 00.28 6.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 1.28z" />
                       </svg>
-                      <div className="text-sm">Lorem ipsum dolor sit amet</div>
+                      <div className="text-sm">20000 words per month</div>
                     </li>
                     <li className="flex items-center py-1">
                       <svg
@@ -148,7 +150,7 @@ export default function Pricing() {
                   {/* Price */}
                   <div className="text-slate-800 font-bold mb-4">
                     <span className="text-2xl">$</span>
-                    <span className="text-3xl">{annual ? "34" : "39"}</span>
+                    <span className="text-3xl">{annual ? "44" : "49"}</span>
                     <span className="text-slate-500 font-medium text-sm">
                       /mo
                     </span>
@@ -180,7 +182,7 @@ export default function Pricing() {
                       >
                         <path d="M10.28 1.28L3.989 7.575 1.695 5.28A1 1 0 00.28 6.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 1.28z" />
                       </svg>
-                      <div className="text-sm">Lorem ipsum dolor sit amet</div>
+                      <div className="text-sm">50000 words per month</div>
                     </li>
                     <li className="flex items-center py-1">
                       <svg
@@ -248,7 +250,7 @@ export default function Pricing() {
                   {/* Price */}
                   <div className="text-slate-800 font-bold mb-4">
                     <span className="text-2xl">$</span>
-                    <span className="text-3xl">{annual ? "74" : "79"}</span>
+                    <span className="text-3xl">{annual ? "94" : "99"}</span>
                     <span className="text-slate-500 font-medium text-sm">
                       /mo
                     </span>
@@ -271,7 +273,7 @@ export default function Pricing() {
                       >
                         <path d="M10.28 1.28L3.989 7.575 1.695 5.28A1 1 0 00.28 6.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 1.28z" />
                       </svg>
-                      <div className="text-sm">Lorem ipsum dolor sit amet</div>
+                      <div className="text-sm">120000 words per month</div>
                     </li>
                     <li className="flex items-center py-1">
                       <svg
