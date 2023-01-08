@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 
 export default function Pricing({
@@ -9,12 +9,20 @@ export default function Pricing({
   session: any;
 }) {
   const [annual, setAnnual] = useState(true);
+  const [plan1, setPlan1] = useState("");
+  const [priceid1, setPriceid1] = useState("");
+  const [intervalok1, setIntervalok1] = useState("");
+  const [plan2, setPlan2] = useState("");
+  const [priceid2, setPriceid2] = useState("");
+  const [intervalok2, setIntervalok2] = useState("");
+  const [plan3, setPlan3] = useState("");
+  const [priceid3, setPriceid3] = useState("");
+  const [intervalok3, setIntervalok3] = useState("");
 
   const prprocessSubscription = async (planId: any) => {
     const res = await fetch(`/api/subscription/${planId}`, {
       method: "GET",
     });
-
     const data = await res.json();
     const stripe = await loadStripe(
       process.env.STRIPE_PUBLISHABLE_KEY as string,
@@ -22,11 +30,50 @@ export default function Pricing({
         apiVersion: "2022-11-15",
       }
     );
-
     await stripe?.redirectToCheckout({
       sessionId: data.sessionId,
     });
   };
+
+  useEffect(() => {
+    if (annual === true) {
+      plans.map((plan: any) => {
+        if (plan.id === "price_1MOeBVSFU8Udq9IAUs1A2yH8") {
+          setPlan1(plan.price);
+          setPriceid1(plan.id);
+          setIntervalok1(plan.interval);
+        }
+        if (plan.id === "price_1MOe8KSFU8Udq9IApZeNCVWm") {
+          setPlan2(plan.price);
+          setPriceid2(plan.id);
+          setIntervalok2(plan.interval);
+        }
+        if (plan.id === "price_1MOeAmSFU8Udq9IA5WfO3kfK") {
+          setPlan3(plan.price);
+          setPriceid3(plan.id);
+          setIntervalok3(plan.interval);
+        }
+      });
+    } else {
+      plans.map((plan: any) => {
+        if (plan.id === "price_1MOeBVSFU8Udq9IAUs1A2yH8") {
+          setPlan1(plan.price);
+          setPriceid1(plan.id);
+          setIntervalok1(plan.interval);
+        }
+        if (plan.id === "price_1MOQpzSFU8Udq9IASvt0uLa0") {
+          setPlan2(plan.price);
+          setPriceid2(plan.id);
+          setIntervalok2(plan.interval);
+        }
+        if (plan.id === "price_1MOe8zSFU8Udq9IAVdqZQurw") {
+          setPlan3(plan.price);
+          setPriceid3(plan.id);
+          setIntervalok3(plan.interval);
+        }
+      });
+    }
+  }, [annual, plans]);
 
   return (
     <div className="grow">
@@ -94,15 +141,15 @@ export default function Pricing({
                   {/* Price */}
                   <div className="text-slate-800 font-bold mb-4">
                     <span className="text-2xl">$</span>
-                    <span className="text-3xl">{annual ? "14" : "19"}</span>
+                    <span className="text-3xl">{plan1}</span>
                     <span className="text-slate-500 font-medium text-sm">
-                      /mo
+                      /{intervalok1}
                     </span>
                   </div>
                   {/* CTA */}
                   <button
                     onClick={() => {
-                      prprocessSubscription(plans[5].id);
+                      prprocessSubscription(priceid1);
                     }}
                     className="btn border-slate-200 hover:border-slate-300 text-slate-600 w-full"
                   >
@@ -181,13 +228,16 @@ export default function Pricing({
                   {/* Price */}
                   <div className="text-slate-800 font-bold mb-4">
                     <span className="text-2xl">$</span>
-                    <span className="text-3xl">{annual ? "44" : "49"}</span>
+                    <span className="text-3xl">{plan2}</span>
                     <span className="text-slate-500 font-medium text-sm">
-                      /mo
+                      /{intervalok2}
                     </span>
                   </div>
                   {/* CTA */}
                   <button
+                    onClick={() => {
+                      prprocessSubscription(priceid2);
+                    }}
                     className="btn border-slate-200 bg-slate-100 text-slate-400 w-full cursor-not-allowed flex items-center"
                     disabled
                   >
@@ -281,13 +331,16 @@ export default function Pricing({
                   {/* Price */}
                   <div className="text-slate-800 font-bold mb-4">
                     <span className="text-2xl">$</span>
-                    <span className="text-3xl">{annual ? "94" : "99"}</span>
+                    <span className="text-3xl">{plan3}</span>
                     <span className="text-slate-500 font-medium text-sm">
-                      /mo
+                      /{intervalok3}
                     </span>
                   </div>
                   {/* CTA */}
-                  <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white w-full">
+                  <button
+                    onClick={() => prprocessSubscription(priceid3)}
+                    className="btn bg-indigo-500 hover:bg-indigo-600 text-white w-full"
+                  >
                     Upgrade
                   </button>
                 </div>
