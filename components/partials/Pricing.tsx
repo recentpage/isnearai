@@ -1,7 +1,33 @@
 import React, { useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
 
-export default function Pricing() {
+export default function Pricing({
+  plans,
+  session,
+}: {
+  plans: any;
+  session: any;
+}) {
   const [annual, setAnnual] = useState(true);
+
+  const prprocessSubscription = async (planId: any) => {
+    const res = await fetch(`/api/subscription/${planId}`, {
+      method: "GET",
+    });
+
+    const data = await res.json();
+    const stripe = await loadStripe(
+      process.env.STRIPE_PUBLISHABLE_KEY as string,
+      {
+        apiVersion: "2022-11-15",
+      }
+    );
+
+    await stripe?.redirectToCheckout({
+      sessionId: data.sessionId,
+    });
+  };
+
   return (
     <div className="grow">
       {/* Panel body */}
@@ -74,7 +100,12 @@ export default function Pricing() {
                     </span>
                   </div>
                   {/* CTA */}
-                  <button className="btn border-slate-200 hover:border-slate-300 text-slate-600 w-full">
+                  <button
+                    onClick={() => {
+                      prprocessSubscription(plans[5].id);
+                    }}
+                    className="btn border-slate-200 hover:border-slate-300 text-slate-600 w-full"
+                  >
                     Downgrade
                   </button>
                 </div>
