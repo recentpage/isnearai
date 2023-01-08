@@ -1,6 +1,7 @@
 import initStripe from "stripe";
 import { buffer } from "micro";
 import { PrismaClient } from "@prisma/client";
+import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 
@@ -10,7 +11,7 @@ export const config = {
   },
 };
 
-const handler = async (req: any, res: any) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //@ts-ignore
   const stripe = initStripe(process.env.STRIPE_SECRET_KEY);
   const sig = req.headers["stripe-signature"];
@@ -21,15 +22,11 @@ const handler = async (req: any, res: any) => {
 
   try {
     const event = stripe.webhooks.constructEvent(buf, sig, signingSecret);
-    // console.log("Event", event);
   } catch (err: any) {
     console.log("Error", err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  console.log("Event", event.type);
-
-  // Handle the checkout.session.completed event
   switch (event.type) {
     case "customer.subscription.created":
       prisma.user.update({
