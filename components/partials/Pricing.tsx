@@ -18,6 +18,7 @@ export default function Pricing({
   const [plan3, setPlan3] = useState("");
   const [priceid3, setPriceid3] = useState("");
   const [intervalok3, setIntervalok3] = useState("");
+  const [isSubscribed, setIsSubscribed] = useState(session?.user?.isSubscribed);
 
   const prprocessSubscription = async (planId: any) => {
     const res = await fetch(`/api/subscription/${planId}`, {
@@ -148,12 +149,13 @@ export default function Pricing({
                   </div>
                   {/* CTA */}
                   <button
+                    id="upgrade1"
                     onClick={() => {
                       prprocessSubscription(priceid1);
                     }}
-                    className="btn border-slate-200 hover:border-slate-300 text-slate-600 w-full"
+                    className="btn font-bold bg-indigo-500 hover:bg-indigo-600 text-white w-full"
                   >
-                    Downgrade
+                    {isSubscribed ? "Manage Subscription" : "Select Plan"}
                   </button>
                 </div>
                 <div className="px-5 pt-4 pb-5">
@@ -235,19 +237,15 @@ export default function Pricing({
                   </div>
                   {/* CTA */}
                   <button
+                    id="upgrade2"
                     onClick={() => {
                       prprocessSubscription(priceid2);
                     }}
-                    className="btn border-slate-200 bg-slate-100 text-slate-400 w-full cursor-not-allowed flex items-center"
-                    disabled
+                    className="btn font-bold bg-indigo-500 hover:bg-indigo-600 text-white w-full"
                   >
-                    <svg
-                      className="w-3 h-3 shrink-0 fill-current mr-2"
-                      viewBox="0 0 12 12"
-                    >
-                      <path d="M10.28 1.28L3.989 7.575 1.695 5.28A1 1 0 00.28 6.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 1.28z" />
-                    </svg>
-                    <span>Current Plan</span>
+                    <span>
+                      {isSubscribed ? "Manage Subscription" : "Select Plan"}
+                    </span>
                   </button>
                 </div>
                 <div className="px-5 pt-4 pb-5">
@@ -338,10 +336,13 @@ export default function Pricing({
                   </div>
                   {/* CTA */}
                   <button
+                    id="upgrade3"
                     onClick={() => prprocessSubscription(priceid3)}
-                    className="btn bg-indigo-500 hover:bg-indigo-600 text-white w-full"
+                    className="btn font-bold bg-indigo-500 hover:bg-indigo-600 text-white w-full"
                   >
-                    Upgrade
+                    <span>
+                      {isSubscribed ? "Manage Subscription" : "Select Plan"}
+                    </span>
                   </button>
                 </div>
                 <div className="px-5 pt-4 pb-5">
