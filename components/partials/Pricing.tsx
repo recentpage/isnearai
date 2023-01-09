@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
+import { useRouter } from "next/router";
 
 export default function Pricing({
   plans,
@@ -8,6 +9,7 @@ export default function Pricing({
   plans: any;
   session: any;
 }) {
+  const router = useRouter();
   const [annual, setAnnual] = useState(true);
   const [plan1, setPlan1] = useState("");
   const [priceid1, setPriceid1] = useState("");
@@ -20,20 +22,28 @@ export default function Pricing({
   const [intervalok3, setIntervalok3] = useState("");
   const [isSubscribed, setIsSubscribed] = useState("false");
 
-  const prprocessSubscription = async (planId: any) => {
-    const res = await fetch(`/api/subscription/${planId}`, {
-      method: "GET",
-    });
-    const data = await res.json();
-    const stripe = await loadStripe(
-      process.env.STRIPE_PUBLISHABLE_KEY as string,
-      {
-        apiVersion: "2022-11-15",
-      }
-    );
-    await stripe?.redirectToCheckout({
-      sessionId: data.sessionId,
-    });
+  const prprocessSubscription = async (planId: any, mode: any) => {
+    if (mode === "checkout") {
+      const res = await fetch(`/api/subscription/${planId}`, {
+        method: "GET",
+      });
+      const data = await res.json();
+      const stripe = await loadStripe(
+        process.env.STRIPE_PUBLISHABLE_KEY as string,
+        {
+          apiVersion: "2022-11-15",
+        }
+      );
+      await stripe?.redirectToCheckout({
+        sessionId: data.sessionId,
+      });
+    } else if (mode === "portal") {
+      const res = await fetch("/api/portal", {
+        method: "GET",
+      });
+      const data = await res.json();
+      router.push(data.url);
+    }
   };
 
   useEffect(() => {
@@ -156,7 +166,11 @@ export default function Pricing({
                   <button
                     id="upgrade1"
                     onClick={() => {
-                      prprocessSubscription(priceid1);
+                      if (isSubscribed == "true") {
+                        prprocessSubscription(priceid1, "portal");
+                      } else {
+                        prprocessSubscription(priceid1, "checkout");
+                      }
                     }}
                     className="btn font-bold bg-indigo-500 hover:bg-indigo-600 text-white w-full"
                   >
@@ -246,7 +260,11 @@ export default function Pricing({
                   <button
                     id="upgrade2"
                     onClick={() => {
-                      prprocessSubscription(priceid2);
+                      if (isSubscribed == "true") {
+                        prprocessSubscription(priceid2, "portal");
+                      } else {
+                        prprocessSubscription(priceid2, "checkout");
+                      }
                     }}
                     className="btn font-bold bg-indigo-500 hover:bg-indigo-600 text-white w-full"
                   >
@@ -346,7 +364,13 @@ export default function Pricing({
                   {/* CTA */}
                   <button
                     id="upgrade3"
-                    onClick={() => prprocessSubscription(priceid3)}
+                    onClick={() => {
+                      if (isSubscribed == "true") {
+                        prprocessSubscription(priceid3, "portal");
+                      } else {
+                        prprocessSubscription(priceid3, "checkout");
+                      }
+                    }}
                     className="btn font-bold bg-indigo-500 hover:bg-indigo-600 text-white w-full"
                   >
                     <span>
