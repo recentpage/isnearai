@@ -45,6 +45,8 @@ model User {
     interval           String?
     credits            Int?                 @default(0)
     bonuscredits       Int?                 @default(1500)
+    planstartdate      String?
+    planenddate        String?
     accounts           Account[]
     sessions           Session[]
     Space              Space[]

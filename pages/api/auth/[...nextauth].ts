@@ -42,7 +42,6 @@ export default NextAuth({
               id: userid,
             },
             data: {
-              //@ts-ignore
               planstartdate: planstartdate.toString(),
               planenddate: planenddate.toString(),
             },
