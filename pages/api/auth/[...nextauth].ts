@@ -32,6 +32,22 @@ export default NextAuth({
         const userid = message.user?.id;
         if (!userid) return;
         if (userid) {
+          const now = new Date();
+          const currentTimeInSeconds = Math.floor(now.getTime() / 1000);
+          //add add this current time to db planstartdate field and planenddate field is 30 days from now
+          const planstartdate = currentTimeInSeconds;
+          const planenddate = currentTimeInSeconds + 2592000;
+          const user = await prisma.user.update({
+            where: {
+              id: userid,
+            },
+            data: {
+              //@ts-ignore
+              planstartdate: planstartdate.toString(),
+              planenddate: planenddate.toString(),
+            },
+          });
+          //create stripe customer and get stripe customer id and add to db
           const customers = customerhandler(userid);
         }
       }
