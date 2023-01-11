@@ -13,21 +13,21 @@ export default function Dashoard({ sortedPlans }: { sortedPlans: any }) {
   const [usedcreadits, setUsedcreadits] = React.useState(0);
 
   const session = useSession();
+
   useEffect(() => {
     //@ts-ignore
-    if (session.data?.user?.credits && session.data?.user?.bonuscredits) {
-      //@ts-ignore
-      setPlancreadits(session.data?.user?.credits);
-      //@ts-ignore
-      setBonuscreadits(session.data?.user?.bonuscredits);
-      setTotalcreadits(
-        //@ts-ignore
-        session.data?.user?.credits + session.data?.user?.bonuscredits
-      );
-      //@ts-ignore
-      setUsedcreadits(session.data?.user?.usedcredits);
-    }
+    // if (session.data?.user?.credits && session.data?.user?.bonuscredits) {
     //@ts-ignore
+    setPlancreadits(session.data?.user?.credits);
+    //@ts-ignore
+    setBonuscreadits(session.data?.user?.bonuscredits);
+    setTotalcreadits(
+      //@ts-ignore
+      session.data?.user?.credits + session.data?.user?.bonuscredits
+    );
+    //@ts-ignore
+    setUsedcreadits(session.data?.user?.usedcredits);
+    // }
   }, [session]);
   if (session.status === "loading") return null;
   if (session.status === "unauthenticated") {
@@ -42,56 +42,52 @@ export default function Dashoard({ sortedPlans }: { sortedPlans: any }) {
           <main>
             <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
               <Welcomeuser />
-              {plancreadits && bonuscreadits && totalcreadits ? (
-                <>
-                  <div className="py-4">
-                    <div className="bg-white shadow-md rounded-lg border">
-                      <div className="px-4 py-5 sm:px-6">
-                        <h4 className="text-lg leading-6 font-bold text-blue-900 pb-2">
-                          Used creadits : {usedcreadits}
-                        </h4>
-                        <div className="bg-blue-500 rounded-lg">
-                          <div
-                            className="h-6 progress bg-orange-400 rounded-lg"
-                            style={{
-                              width: `${(usedcreadits / totalcreadits) * 100}%`,
-                            }}
-                          ></div>
-                        </div>
+              <>
+                <div className="py-4">
+                  <div className="bg-white shadow-md rounded-lg border">
+                    <div className="px-4 py-5 sm:px-6">
+                      <h4 className="text-lg leading-6 font-bold text-blue-900 pb-2">
+                        Used creadits : {usedcreadits}
+                      </h4>
+                      <div className="bg-blue-500 rounded-lg">
+                        <div
+                          className="h-6 progress bg-orange-400 rounded-lg"
+                          style={{
+                            width: `${(usedcreadits / totalcreadits) * 100}%`,
+                          }}
+                        ></div>
                       </div>
                     </div>
                   </div>
-                  <div className="py-4">
-                    <div className="bg-gray-100 shadow-md rounded-lg">
-                      <div className="px-4 py-5 sm:px-6">
-                        <h4 className="text-lg leading-6 font-bold text-blue-900">
-                          Plan creadits : {plancreadits}
-                        </h4>
-                      </div>
+                </div>
+                <div className="py-4">
+                  <div className="bg-gray-100 shadow-md rounded-lg">
+                    <div className="px-4 py-5 sm:px-6">
+                      <h4 className="text-lg leading-6 font-bold text-blue-900">
+                        Plan creadits : {plancreadits}
+                      </h4>
                     </div>
                   </div>
-                  <div className="py-4">
-                    <div className="bg-gray-100 shadow-md rounded-lg">
-                      <div className="px-4 py-5 sm:px-6">
-                        <h4 className="text-lg leading-6 font-bold text-blue-900">
-                          Bonus creadits : {bonuscreadits}
-                        </h4>
-                      </div>
+                </div>
+                <div className="py-4">
+                  <div className="bg-gray-100 shadow-md rounded-lg">
+                    <div className="px-4 py-5 sm:px-6">
+                      <h4 className="text-lg leading-6 font-bold text-blue-900">
+                        Bonus creadits : {bonuscreadits}
+                      </h4>
                     </div>
                   </div>
-                  <div className="py-4">
-                    <div className="bg-gray-100 shadow-md rounded-lg">
-                      <div className="px-4 py-5 sm:px-6">
-                        <h4 className="text-lg leading-6 font-bold text-blue-900">
-                          Total creadits : {totalcreadits}
-                        </h4>
-                      </div>
+                </div>
+                <div className="py-4">
+                  <div className="bg-gray-100 shadow-md rounded-lg">
+                    <div className="px-4 py-5 sm:px-6">
+                      <h4 className="text-lg leading-6 font-bold text-blue-900">
+                        Total creadits : {totalcreadits}
+                      </h4>
                     </div>
                   </div>
-                </>
-              ) : (
-                <div>Loading...</div>
-              )}
+                </div>
+              </>
               <Pricing plans={sortedPlans} session={session} />
             </div>
           </main>
