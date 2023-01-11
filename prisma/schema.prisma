@@ -51,6 +51,7 @@ model User {
     Tools              Tools[]
     Toolgen            Toolgen[]
     Productdescription Productdescription[]
+    Creadit            Creadit[]
 }
 
 model VerificationToken {
@@ -86,6 +87,7 @@ model Tools {
     createdAt   DateTime  @default(now())
     user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
     Toolgen     Toolgen[]
+    Creadit     Creadit[]
 }
 
 model Toolgen {
@@ -102,6 +104,7 @@ model Toolgen {
     user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
     Copygen            Copygen[]
     Productdescription Productdescription[]
+    Creadit            Creadit[]
 }
 
 model Copygen {
@@ -123,4 +126,16 @@ model Productdescription {
     createdAt              DateTime @default(now())
     toolgen                Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
     user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Creadit {
+    id        String   @id @default(cuid())
+    amount    Int?
+    toolgenId String?
+    toolId    String?
+    createdAt DateTime @default(now())
+    userId    String
+    tool      Tools?   @relation(fields: [toolId], references: [id])
+    toolgen   Toolgen? @relation(fields: [toolgenId], references: [id])
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
