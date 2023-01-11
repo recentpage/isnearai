@@ -53,6 +53,8 @@ export default NextAuth({
           stripeId: userget?.stripeId,
           isSubscribed: userget?.isSubscribed,
           interval: userget?.interval,
+          credits: userget?.credits,
+          bonuscredits: userget?.bonuscredits,
         } as User,
       };
       return session;
