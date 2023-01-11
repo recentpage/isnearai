@@ -45,6 +45,13 @@ export default NextAuth({
           id: token?.sub,
         },
       });
+      //get count of amount field all values of credits from db and get total used credits
+      const credits = await prisma.creadit.findMany({
+        where: {
+          userId: token?.sub,
+        },
+      });
+      const usedcredits = credits.reduce((a: any, b: any) => a + b.amount, 0);
       session = {
         ...session,
         user: {
@@ -55,6 +62,7 @@ export default NextAuth({
           interval: userget?.interval,
           credits: userget?.credits,
           bonuscredits: userget?.bonuscredits,
+          usedcredits: usedcredits,
         } as User,
       };
       return session;

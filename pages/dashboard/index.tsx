@@ -24,6 +24,8 @@ export default function Dashoard({ sortedPlans }: { sortedPlans: any }) {
         //@ts-ignore
         session.data?.user?.credits + session.data?.user?.bonuscredits
       );
+      //@ts-ignore
+      setUsedcreadits(session.data?.user?.usedcredits);
     }
     //@ts-ignore
   }, [session]);
