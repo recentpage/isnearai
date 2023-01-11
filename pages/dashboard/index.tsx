@@ -8,8 +8,8 @@ import { useSession } from "next-auth/react";
 
 export default function Dashoard({ sortedPlans }: { sortedPlans: any }) {
   const session = useSession();
-  console.log(session);
-  console.log(sortedPlans);
+  // console.log(session);
+  // console.log(sortedPlans);
   if (session.status === "loading") return null;
   if (session.status === "unauthenticated") {
     //redirect to login page

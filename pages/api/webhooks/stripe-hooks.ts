@@ -28,6 +28,37 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   console.log(event.type);
+  //get subscription by id
+  const subscription = await stripe.subscriptions.retrieve(
+    event.data.object.id
+  );
+
+  let creditsToAdd = 0;
+  if (subscription.plan.id === "price_1MOeBVSFU8Udq9IAUs1A2yH8") {
+    if (subscription.plan.interval === "month") {
+      creditsToAdd = 1000;
+    } else if (subscription.plan.interval === "year") {
+      creditsToAdd = 1000 * 12;
+    }
+  } else if (
+    subscription.plan.id === "price_1MOe7iSFU8Udq9IANcmJWCG9" ||
+    subscription.plan.id === "price_1MOe8KSFU8Udq9IApZeNCVWm"
+  ) {
+    if (subscription.plan.interval === "month") {
+      creditsToAdd = 20000;
+    } else if (subscription.plan.interval === "year") {
+      creditsToAdd = 20000 * 12;
+    }
+  } else if (
+    subscription.plan.id === "price_1MOe8zSFU8Udq9IAVdqZQurw" ||
+    subscription.plan.id === "price_1MOeAmSFU8Udq9IA5WfO3kfK"
+  ) {
+    if (subscription.plan.interval === "month") {
+      creditsToAdd = 50000;
+    } else if (subscription.plan.interval === "year") {
+      creditsToAdd = 50000 * 12;
+    }
+  }
 
   switch (event.type) {
     case "customer.subscription.created":
@@ -39,6 +70,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           data: {
             isSubscribed: "true",
             interval: event.data.object.plan.interval,
+            credits: creditsToAdd,
           },
         })
         .catch((err) => {
@@ -54,6 +86,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           data: {
             isSubscribed: "false",
             interval: null,
+            credits: null,
           },
         })
         .catch((err) => {
@@ -69,6 +102,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           data: {
             isSubscribed: "true",
             interval: event.data.object.plan.interval,
+            credits: creditsToAdd,
           },
         })
         .catch((err) => {

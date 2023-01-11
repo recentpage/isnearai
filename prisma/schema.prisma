@@ -43,6 +43,8 @@ model User {
     stripeId           String?              @unique
     isSubscribed       String?              @default("false")
     interval           String?
+    credits            Int?                 @default(0)
+    bonuscredits       Int?                 @default(1500)
     accounts           Account[]
     sessions           Session[]
     Space              Space[]

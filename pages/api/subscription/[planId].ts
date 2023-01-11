@@ -25,6 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     customer: session.user?.stripeId,
     payment_method_types: ["card"],
     line_items: lineItems,
+    allow_promotion_codes: true,
     mode: "subscription",
     success_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/success`,
     cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/cancel`,
