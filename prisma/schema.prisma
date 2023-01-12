@@ -54,6 +54,7 @@ model User {
     Toolgen            Toolgen[]
     Productdescription Productdescription[]
     Creadit            Creadit[]
+    Openaigen          Openaigen[]
 }
 
 model VerificationToken {
@@ -77,7 +78,7 @@ model Space {
 }
 
 model Tools {
-    id          String    @id @default(cuid())
+    id          String      @id @default(cuid())
     name        String?
     description String?
     slug        String?
@@ -86,10 +87,11 @@ model Tools {
     imageUrl    String?
     model       String?
     userId      String
-    createdAt   DateTime  @default(now())
-    user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createdAt   DateTime    @default(now())
+    user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
     Toolgen     Toolgen[]
     Creadit     Creadit[]
+    Openaigen   Openaigen[]
 }
 
 model Toolgen {
@@ -107,6 +109,7 @@ model Toolgen {
     Copygen            Copygen[]
     Productdescription Productdescription[]
     Creadit            Creadit[]
+    Openaigen          Openaigen[]
 }
 
 model Copygen {
@@ -132,21 +135,36 @@ model Productdescription {
 }
 
 model Creadit {
-    id                String   @id @default(cuid())
-    amount            Int?
-    charCount         Int?
-    wordCount         Int?
-    variations        Int?
+    id          String     @id @default(cuid())
+    amount      Int?
+    charCount   Int?
+    wordCount   Int?
+    toolgenId   String?
+    toolId      String?
+    openaigenId String?
+    userId      String
+    createdAt   DateTime   @default(now())
+    openaigen   Openaigen? @relation(fields: [openaigenId], references: [id])
+    tool        Tools?     @relation(fields: [toolId], references: [id])
+    toolgen     Toolgen?   @relation(fields: [toolgenId], references: [id])
+    user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Openaigen {
+    id                String    @id @default(cuid())
     openaiid          String?
+    prompt            String?
+    choices           String?
     prompt_tokens     Int?
     completion_tokens Int?
-    openai_tokens     Int?
+    total_tokens      Int?
     model             String?
     toolgenId         String?
     toolId            String?
-    createdAt         DateTime @default(now())
     userId            String
-    tool              Tools?   @relation(fields: [toolId], references: [id])
-    toolgen           Toolgen? @relation(fields: [toolgenId], references: [id])
-    user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createdAt         DateTime  @default(now())
+    toolgen           Toolgen?  @relation(fields: [toolgenId], references: [id])
+    tool              Tools?    @relation(fields: [toolId], references: [id])
+    user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    Creadit           Creadit[]
 }
