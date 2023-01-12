@@ -15,7 +15,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   //@ts-ignore
   const userId = session.user?.id;
-  const toolId = "clcn7zza30000v6gg8k1y9acr";
+  const toolId = "clcsz48tl0000v6pgsof9bz8d";
   const { proid, toneofvoice, productname, productcharacteristics } = req.body;
 
   //get space id from pages/api/checkspace.ts import
@@ -43,8 +43,14 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     if (response.status === 200) {
-  
       let text = response.data.choices[0].text;
+      //get openai id
+      let openaiId: string = response.data.id;
+      let openaiModel: string = response.data.model;
+      //get completion_tokens used
+      let completionTokens = response.data.usage?.completion_tokens;
+      let promptTokens = response.data.usage?.prompt_tokens;
+      let openaiTokens = response.data.usage?.total_tokens;
       console.log(text);
       // split the text into 3 variations by \n
       const variations = text?.split("\n");
@@ -97,10 +103,30 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
         if (toolgen.id) {
           if (newVariationsArray.length > 0) {
             newVariationsArray.map(async (e: any) => {
+              //calculate char count for each variation and word count for each variation
+              const charCount: number = e.length;
+              const wordCount: number = e.split(" ").length;
+              const variationcount: number = newVariationsArray.length;
               const copys = await prisma.copygen.create({
                 data: {
                   text: e,
                   toolgenId: toolgen.id,
+                },
+              });
+              const addCharCount = await prisma.creadit.create({
+                data: {
+                  amount: wordCount,
+                  charCount: charCount,
+                  wordCount: wordCount,
+                  toolgenId: toolgen.id,
+                  openaiid: openaiId,
+                  model: openaiModel,
+                  completion_tokens: completionTokens,
+                  prompt_tokens: promptTokens,
+                  openai_tokens: openaiTokens,
+                  toolId: toolId,
+                  userId: userId,
+                  variations: variationcount,
                 },
               });
             });
@@ -123,12 +149,30 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(newVariationsArray);
         if (newVariationsArray.length > 0) {
           newVariationsArray.map(async (e: any) => {
-            // console.log(proid);
-            // console.log(e);
+            //calculate char count for each variation and word count for each variation
+            const charCount: number = e.length;
+            const wordCount: number = e.split(" ").length;
+            const variationcount: number = newVariationsArray.length;
             const copys = await prisma.copygen.create({
               data: {
                 text: e,
                 toolgenId: proid,
+              },
+            });
+            const addCharCount = await prisma.creadit.create({
+              data: {
+                amount: wordCount,
+                charCount: charCount,
+                wordCount: wordCount,
+                toolgenId: proid,
+                openaiid: openaiId,
+                model: openaiModel,
+                completion_tokens: completionTokens,
+                prompt_tokens: promptTokens,
+                openai_tokens: openaiTokens,
+                toolId: toolId,
+                userId: userId,
+                variations: variationcount,
               },
             });
           });
@@ -136,7 +180,9 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
         status = "success";
         act = "update";
       }
-      res.status(200).json({ status, act, proid: proidnew });
+      res
+        .status(200)
+        .json({ status, act, proid: proidnew, response: response.data });
     }
   } catch (error) {
     //@ts-ignore

@@ -110,12 +110,13 @@ model Toolgen {
 }
 
 model Copygen {
-    id        String   @id @default(cuid())
-    text      String?
-    isSaved   String?  @default("false")
-    toolgenId String
-    createdAt DateTime @default(now())
-    toolgen   Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
+    id           String   @id @default(cuid())
+    text         String?
+    openaitokens String?
+    isSaved      String?  @default("false")
+    toolgenId    String
+    createdAt    DateTime @default(now())
+    toolgen      Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
 }
 
 model Productdescription {
@@ -131,13 +132,21 @@ model Productdescription {
 }
 
 model Creadit {
-    id        String   @id @default(cuid())
-    amount    Int?
-    toolgenId String?
-    toolId    String?
-    createdAt DateTime @default(now())
-    userId    String
-    tool      Tools?   @relation(fields: [toolId], references: [id])
-    toolgen   Toolgen? @relation(fields: [toolgenId], references: [id])
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id                String   @id @default(cuid())
+    amount            Int?
+    charCount         Int?
+    wordCount         Int?
+    variations        Int?
+    openaiid          String?
+    prompt_tokens     Int?
+    completion_tokens Int?
+    openai_tokens     Int?
+    model             String?
+    toolgenId         String?
+    toolId            String?
+    createdAt         DateTime @default(now())
+    userId            String
+    tool              Tools?   @relation(fields: [toolId], references: [id])
+    toolgen           Toolgen? @relation(fields: [toolgenId], references: [id])
+    user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
