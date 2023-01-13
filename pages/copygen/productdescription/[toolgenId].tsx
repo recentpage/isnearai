@@ -95,6 +95,14 @@ export default function Copygen({
       console.log(data);
       console.log(data.status);
       setLoading(false);
+      if (data.error != null) {
+        toast(data.error, {
+          hideProgressBar: true,
+          autoClose: 2000,
+          type: "error",
+        });
+        return;
+      }
       if (data.status == "success") {
         toast("Your Copy Was Genrated", {
           hideProgressBar: true,

@@ -3,8 +3,10 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export default async function getCredits(userId: string) {
+export default async function getCredits(userId: string, tool: string) {
+  // calculate the minimum credits based on the tool name
   if (userId === null) return null;
+  // get the user data from database
   const user: any = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -16,11 +18,15 @@ export default async function getCredits(userId: string) {
   });
   // calculate the total credits
   const totalCredits = user.credits + user.bonuscredits;
-  //make new array to return the credits and bonuscredits and total credits make with keys like plancredits, bonuscredits, totalcredits
-  const credits = {
-    plancredits: user.credits,
-    bonuscredits: user.bonuscredits,
-    totalcredits: totalCredits,
-  };
-  return credits;
+
+  let minimumCredits = 0;
+  if (tool === "productdescription") {
+    minimumCredits = 300;
+  } else {
+    minimumCredits = 200;
+  }
+  if (totalCredits > minimumCredits) {
+    return true;
+  }
+  return false;
 }
