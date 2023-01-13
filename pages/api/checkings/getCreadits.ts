@@ -19,6 +19,19 @@ export default async function getCredits(userId: string, tool: string) {
   // calculate the total credits
   const totalCredits = user.credits + user.bonuscredits;
 
+  const usedCredits = await prisma.creadit.findMany({
+    where: {
+      userId: userId,
+    },
+    select: {
+      amount: true,
+    },
+  });
+
+  const usedcredits = usedCredits.reduce((a: any, b: any) => a + b.amount, 0);
+
+  const unusedCredits = totalCredits - usedcredits;
+
   let minimumCredits = 0;
   if (tool === "productdescription") {
     minimumCredits = 300;
@@ -27,7 +40,7 @@ export default async function getCredits(userId: string, tool: string) {
   } else {
     minimumCredits = 200;
   }
-  if (totalCredits > minimumCredits) {
+  if (unusedCredits > minimumCredits) {
     return true;
   }
   return false;
