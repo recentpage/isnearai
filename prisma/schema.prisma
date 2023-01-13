@@ -55,6 +55,7 @@ model User {
     Productdescription Productdescription[]
     Creadit            Creadit[]
     Openaigen          Openaigen[]
+    Facebookadsgen     Facebookadsgen[]
 }
 
 model VerificationToken {
@@ -110,6 +111,7 @@ model Toolgen {
     Productdescription Productdescription[]
     Creadit            Creadit[]
     Openaigen          Openaigen[]
+    Facebookadsgen     Facebookadsgen?
 }
 
 model Copygen {
@@ -133,6 +135,20 @@ model Productdescription {
     createdAt              DateTime @default(now())
     toolgen                Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
     user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Facebookadsgen {
+    id                 String   @id @default(cuid())
+    productname        String?
+    productdescription String?
+    occasion           String?
+    promotion          String?
+    useemoji           String?  @default("false")
+    toolgenId          String   @unique
+    userId             String
+    createdAt          DateTime @default(now())
+    toolgen            Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
+    user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Creadit {

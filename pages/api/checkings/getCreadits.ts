@@ -22,6 +22,8 @@ export default async function getCredits(userId: string, tool: string) {
   let minimumCredits = 0;
   if (tool === "productdescription") {
     minimumCredits = 300;
+  } else if (tool === "facebookadsgen") {
+    minimumCredits = 400;
   } else {
     minimumCredits = 200;
   }
