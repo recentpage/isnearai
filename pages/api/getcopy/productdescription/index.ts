@@ -51,7 +51,23 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
       let completionTokens = response.data.usage?.completion_tokens;
       let promptTokens = response.data.usage?.prompt_tokens;
       let openaiTokens = response.data.usage?.total_tokens;
+      let openaichoices = JSON.stringify(response.data.choices);
       console.log(text);
+      //create a new openai gen
+      const openaiGen = await prisma.openaigen.create({
+        data: {
+          openaiid: openaiId,
+          model: openaiModel,
+          prompt: prompt,
+          completion_tokens: completionTokens,
+          prompt_tokens: promptTokens,
+          total_tokens: openaiTokens,
+          choices: openaichoices,
+          toolId: toolId,
+          userId: userId,
+        },
+      });
+      let openaiGenId = openaiGen.id;
       // split the text into 3 variations by \n
       const variations = text?.split("\n");
       // console.log(variations);
@@ -102,6 +118,15 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
 
         if (toolgen.id) {
           if (newVariationsArray.length > 0) {
+            // update toolgen id in openai gen
+            const updateOpenaiGen = await prisma.openaigen.update({
+              where: {
+                id: openaiGenId,
+              },
+              data: {
+                toolgenId: toolgen.id,
+              },
+            });
             newVariationsArray.map(async (e: any) => {
               //calculate char count for each variation and word count for each variation
               const charCount: number = e.length;
@@ -111,6 +136,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
                 data: {
                   text: e,
                   toolgenId: toolgen.id,
+                  openaigenId: openaiGenId,
                 },
               });
               const addCharCount = await prisma.creadit.create({
@@ -119,14 +145,9 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
                   charCount: charCount,
                   wordCount: wordCount,
                   toolgenId: toolgen.id,
-                  openaiid: openaiId,
-                  model: openaiModel,
-                  completion_tokens: completionTokens,
-                  prompt_tokens: promptTokens,
-                  openai_tokens: openaiTokens,
                   toolId: toolId,
                   userId: userId,
-                  variations: variationcount,
+                  openaigenId: openaiGenId,
                 },
               });
             });
@@ -148,6 +169,15 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
         });
         console.log(newVariationsArray);
         if (newVariationsArray.length > 0) {
+          // update toolgen id in openai gen
+          const updateOpenaiGen1 = await prisma.openaigen.update({
+            where: {
+              id: openaiGenId,
+            },
+            data: {
+              toolgenId: proid,
+            },
+          });
           newVariationsArray.map(async (e: any) => {
             //calculate char count for each variation and word count for each variation
             const charCount: number = e.length;
@@ -157,6 +187,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
               data: {
                 text: e,
                 toolgenId: proid,
+                openaigenId: openaiGenId,
               },
             });
             const addCharCount = await prisma.creadit.create({
@@ -165,14 +196,9 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
                 charCount: charCount,
                 wordCount: wordCount,
                 toolgenId: proid,
-                openaiid: openaiId,
-                model: openaiModel,
-                completion_tokens: completionTokens,
-                prompt_tokens: promptTokens,
-                openai_tokens: openaiTokens,
                 toolId: toolId,
                 userId: userId,
-                variations: variationcount,
+                openaigenId: openaiGenId,
               },
             });
           });

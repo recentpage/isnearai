@@ -113,13 +113,14 @@ model Toolgen {
 }
 
 model Copygen {
-    id           String   @id @default(cuid())
-    text         String?
-    openaitokens String?
-    isSaved      String?  @default("false")
-    toolgenId    String
-    createdAt    DateTime @default(now())
-    toolgen      Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
+    id          String     @id @default(cuid())
+    text        String?
+    openaigenId String?
+    isSaved     String?    @default("false")
+    toolgenId   String
+    createdAt   DateTime   @default(now())
+    openaigen   Openaigen? @relation(fields: [openaigenId], references: [id])
+    toolgen     Toolgen    @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
 }
 
 model Productdescription {
@@ -167,4 +168,5 @@ model Openaigen {
     tool              Tools?    @relation(fields: [toolId], references: [id])
     user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
     Creadit           Creadit[]
+    Copygen           Copygen[]
 }
