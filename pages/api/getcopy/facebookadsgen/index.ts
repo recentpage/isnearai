@@ -33,11 +33,9 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
     storeuseemogies = "false";
   }
 
-  if (useemogies === true) {
-    useemogies = "Use Emogies to make the copy more engaging";
-  } else {
-    useemogies = "don't use Emogies";
-  }
+  let useEmogiesString = useemogies
+    ? "Use Emogies to make the copy more engaging"
+    : "Don't use Emogies";
 
   //get space id from pages/api/checkspace.ts import
   const spaceId = await checkSpace(userId);
@@ -56,7 +54,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
   // const prompt = `Generate a product description for a product with the following attributes: product name = '${productname}', product description = '${productcharacteristics}'. Make sure to include details about the product's features and benefits.use Tone of voice = '${toneofvoice}'. genrate 3 variations of the product description.`;
   // // console.log(prompt);
   //getnrate a prompt for openai for facebook ads copy gen tool based on the user input
-  const prompt = `Generate a Facebook ad copy for a product or service with the following attributes: product name = '${productname}', product description = '${productdescription}', ocassion = '${ocassion}', promotion = '${promotion}'.${useemogies}. Make sure to include details about the product's features and benefits. genrate 3 variations of the product description.`;
+  const prompt = `Generate a Facebook ad copy for a product or service with the following attributes: product name = '${productname}', product description = '${productdescription}', ocassion = '${ocassion}', promotion = '${promotion}'.${useEmogiesString}. Make sure to include details about the product's features and benefits. genrate 3 variations of the product description.`;
   try {
     //check if the user has enough credits to generate the product description if not return error
     const checkCredits = await getCredits(userId, "facebookadsgen");
