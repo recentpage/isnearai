@@ -26,10 +26,17 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
     promotion,
   } = req.body;
 
+  let storeuseemogies = "";
+  if (useemogies === true) {
+    storeuseemogies = "true";
+  } else {
+    storeuseemogies = "false";
+  }
+
   if (useemogies === true) {
     useemogies = "Use Emogies to make the copy more engaging";
   } else {
-    useemogies = "Do not use Emogies";
+    useemogies = "don't use Emogies";
   }
 
   //get space id from pages/api/checkspace.ts import
@@ -129,12 +136,12 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
                 slug: newSlug + "/" + toolgen.id,
               },
             });
-            const addProductdescription = await prisma.facebookadsgen.create({
+            const addFacebookadsgen = await prisma.facebookadsgen.create({
               data: {
                 productname: productname,
                 productdescription: productdescription,
                 occasion: ocassion,
-                useemoji: useemogies,
+                useemoji: storeuseemogies,
                 promotion: promotion,
                 toolgenId: toolgen.id,
                 userId: userId,
@@ -183,7 +190,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
           act = "create";
           proidnew = toolgen.id.toString();
         } else {
-          const addProductdescription = await prisma.facebookadsgen.update({
+          const addFacebookadsgen = await prisma.facebookadsgen.update({
             where: {
               toolgenId: proid,
             },
@@ -191,7 +198,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
               productname: productname,
               productdescription: productdescription,
               occasion: ocassion,
-              useemoji: useemogies,
+              useemoji: storeuseemogies,
               promotion: promotion,
             },
           });

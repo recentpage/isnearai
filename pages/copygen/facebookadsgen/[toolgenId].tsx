@@ -13,13 +13,12 @@ export default function Copygen({
   toolgen,
 }: any) {
   const router = useRouter();
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(true);
   const [doctitle, setDoctitle] = useState("");
   const [productname, setProductname] = useState("");
   const [productdescription, setProductdescription] = useState("");
   const [ocassion, setOcassion] = useState("");
   const [promotion, setPromotion] = useState("");
-  const [useemogies, setUseemogies] = useState("");
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState("");
 
@@ -31,9 +30,18 @@ export default function Copygen({
     if (facebookadsgen != null && facebookadsgen.length > 0) {
       setProductname(facebookadsgen[0].productname);
       setProductdescription(facebookadsgen[0].productdescription);
-      setOcassion(facebookadsgen[0].ocassion);
+      setOcassion(facebookadsgen[0].occasion);
       setPromotion(facebookadsgen[0].promotion);
-      setUseemogies(facebookadsgen[0].useemogies);
+      if (facebookadsgen[0].useemoji == "true") {
+        // setIsChecked(true);
+        //make checkbox checked
+        const checkbox = document.getElementById("useemojis");
+        if (checkbox != null) {
+          checkbox.setAttribute("checked", "true");
+        }
+      } else if (facebookadsgen[0].useemoji == "false") {
+        setIsChecked(false);
+      }
     }
   }, [facebookadsgen, toolgen]);
 
@@ -67,6 +75,14 @@ export default function Copygen({
         autoClose: 2000,
         type: "success",
       });
+    }
+  };
+
+  const handleischaked = async (isChecked: any) => {
+    if (isChecked == true) {
+      setIsChecked(false);
+    } else {
+      setIsChecked(true);
     }
   };
 
@@ -427,7 +443,7 @@ export default function Copygen({
                               id="useemojis"
                               name="useemojis"
                               aria-label="Toggle button to enable emojis in every copy"
-                              onChange={() => setIsChecked(!isChecked)}
+                              onChange={() => handleischaked(isChecked)}
                             />
                             <div className="w-6 h-6 bg-white rounded-full absolute top-0 left-0 transform -translate-x-full"></div>
                           </div>
@@ -618,6 +634,10 @@ export async function getServerSideProps(context: any) {
       select: {
         id: true,
         productname: true,
+        productdescription: true,
+        occasion: true,
+        promotion: true,
+        useemoji: true,
       },
       where: {
         toolgenId: proid,
