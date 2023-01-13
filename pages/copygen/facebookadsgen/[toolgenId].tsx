@@ -13,7 +13,7 @@ export default function Copygen({
   toolgen,
 }: any) {
   const router = useRouter();
-  const [isChecked, setIsChecked] = useState(true);
+  const [isChecked, setIsChecked] = useState(false);
   const [doctitle, setDoctitle] = useState("");
   const [productname, setProductname] = useState("");
   const [productdescription, setProductdescription] = useState("");
@@ -33,14 +33,10 @@ export default function Copygen({
       setOcassion(facebookadsgen[0].occasion);
       setPromotion(facebookadsgen[0].promotion);
       if (facebookadsgen[0].useemoji == "true") {
-        // setIsChecked(true);
-        //make checkbox checked
         const checkbox = document.getElementById("useemojis");
         if (checkbox != null) {
           checkbox.setAttribute("checked", "true");
         }
-      } else if (facebookadsgen[0].useemoji == "false") {
-        setIsChecked(false);
       }
     }
   }, [facebookadsgen, toolgen]);
@@ -75,14 +71,6 @@ export default function Copygen({
         autoClose: 2000,
         type: "success",
       });
-    }
-  };
-
-  const handleischaked = async (isChecked: any) => {
-    if (isChecked == true) {
-      setIsChecked(false);
-    } else {
-      setIsChecked(true);
     }
   };
 
@@ -443,7 +431,7 @@ export default function Copygen({
                               id="useemojis"
                               name="useemojis"
                               aria-label="Toggle button to enable emojis in every copy"
-                              onChange={() => handleischaked(isChecked)}
+                              onChange={() => setIsChecked(!isChecked)}
                             />
                             <div className="w-6 h-6 bg-white rounded-full absolute top-0 left-0 transform -translate-x-full"></div>
                           </div>
