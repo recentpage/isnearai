@@ -56,6 +56,7 @@ model User {
     Creadit            Creadit[]
     Openaigen          Openaigen[]
     Facebookadsgen     Facebookadsgen[]
+    Emailcopy          Emailcopy[]
 }
 
 model VerificationToken {
@@ -112,6 +113,7 @@ model Toolgen {
     Creadit            Creadit[]
     Openaigen          Openaigen[]
     Facebookadsgen     Facebookadsgen?
+    Emailcopy          Emailcopy[]
 }
 
 model Copygen {
@@ -149,6 +151,20 @@ model Facebookadsgen {
     createdAt          DateTime @default(now())
     toolgen            Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
     user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Emailcopy {
+    id          String   @id @default(cuid())
+    to          String?
+    companyname String?
+    contexts    String?
+    purpose     String?
+    toneofvoice String?
+    toolgenId   String   @unique
+    userId      String
+    createdAt   DateTime @default(now())
+    toolgen     Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
+    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Creadit {
