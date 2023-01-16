@@ -35,8 +35,8 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
   const api = new OpenAIApi(configuration);
   //   const prompt = `Generate a product description for a product with the following attributes: product name = '${productname}', product description = '${productcharacteristics}'. Make sure to include details about the product's features and benefits.use Tone of voice = '${toneofvoice}'. genrate 3 variations of the product description.`;
   // console.log(prompt);
-  const prompt = `Generate an email copy for a company with the following attributes: company name = '${companyname}', context = '${contexts}', purpose = '${purpose}'. Make sure to include details about the company's products and services. use Tone of voice = '${toneofvoice}'. genrate 3 variations of the email copy.`;
-  // console.log(prompt);
+  const prompt = `Generate an email copy for a company with the following attributes: to = '${to}', company name = '${companyname}', context = '${contexts}', purpose = '${purpose}'. Make sure to include details about the company's products and services. use Tone of voice = '${toneofvoice}'. genrate 3 variations of the email copy.`;
+  console.log(prompt);
   try {
     //check if the user has enough credits to generate the product description if not return error
     const checkCredits = await getCredits(userId, "emailcopy");
@@ -55,6 +55,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
 
       if (response.status === 200) {
         let text = response.data.choices[0].text;
+        console.log(text);
         //get openai id
         let openaiId: string = response.data.id;
         let openaiModel: string = response.data.model;
@@ -63,7 +64,6 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
         let promptTokens = response.data.usage?.prompt_tokens;
         let openaiTokens = response.data.usage?.total_tokens;
         let openaichoices = JSON.stringify(response.data.choices);
-        console.log(text);
         //create a new openai gen
         const openaiGen = await prisma.openaigen.create({
           data: {
@@ -80,7 +80,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
         });
         let openaiGenId = openaiGen.id;
         // split the text into 3 variations by \n
-        const variations = text?.split("\n");
+        const variations = text?.split("\nVariation");
         // console.log(variations);
         // use for and map to get the variations
         let variationsArray: any = [];
@@ -92,6 +92,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
             }
           });
         }
+        console.log(newVariationsArray);
         let status = "";
         let act = "";
         let proidnew = "";
@@ -195,12 +196,13 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
             });
             newVariationsArray.map(async (e: any) => {
               //calculate char count for each variation and word count for each variation
+              const stringtext = JSON.stringify(e);
               const charCount: number = e.length;
               const wordCount: number = e.split(" ").length;
               const variationcount: number = newVariationsArray.length;
               const copys = await prisma.copygen.create({
                 data: {
-                  text: e,
+                  text: stringtext,
                   toolgenId: proid,
                   openaigenId: openaiGenId,
                 },
@@ -223,7 +225,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
         }
         res
           .status(200)
-          .json({ status, act, proid: proidnew, response: response.data });
+          .json({ status, act, proid: proidnew, response: response.data , newVariationsArray});
       }
     }
   } catch (error) {
