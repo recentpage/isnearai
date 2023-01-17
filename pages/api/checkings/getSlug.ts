@@ -9,20 +9,17 @@ export default async function getSug(req: any, res: any, toolid: any) {
   if (!session) {
     res.status(401).json({ error: "Unauthorized" });
   }
-  const toolsset = "productdescription";
 
   if (toolid && toolid !== "undefined") {
-    if (toolsset === "productdescription") {
-      const getSug = await prisma.tools.findMany({
-        where: {
-          id: toolid,
-        },
-        select: {
-          slug: true,
-        },
-      });
+    const getSug = await prisma.tools.findMany({
+      where: {
+        id: toolid,
+      },
+      select: {
+        slug: true,
+      },
+    });
 
-      return getSug[0].slug;
-    }
+    return getSug[0].slug;
   }
 }
