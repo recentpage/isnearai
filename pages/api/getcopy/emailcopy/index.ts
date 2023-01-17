@@ -143,6 +143,10 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
               });
               newVariationsArray.map(async (e: any) => {
                 //calculate char count for each variation and word count for each variation
+                //remove spaces from the start and end of the string
+                e = e.trim();
+                //remove firrst 4 characters from the string using substring
+                e = e.substring(4);
                 const charCount: number = e.length;
                 const wordCount: number = e.split(" ").length;
                 const variationcount: number = newVariationsArray.length;
@@ -151,6 +155,16 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
                     text: e,
                     toolgenId: toolgen.id,
                     openaigenId: openaiGenId,
+                  },
+                });
+                const copysupdate = await prisma.copygen.update({
+                  where: {
+                    id: copys.id,
+                  },
+                  data: {
+                    text: {
+                      set: e,
+                    },
                   },
                 });
                 const addCharCount = await prisma.creadit.create({
@@ -196,15 +210,28 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
             });
             newVariationsArray.map(async (e: any) => {
               //calculate char count for each variation and word count for each variation
-              const stringtext = JSON.stringify(e);
+              //remove spaces from the start and end of the string
+              e = e.trim();
+              //remove firrst 4 characters from the string using substring
+              e = e.substring(4);
               const charCount: number = e.length;
               const wordCount: number = e.split(" ").length;
               const variationcount: number = newVariationsArray.length;
               const copys = await prisma.copygen.create({
                 data: {
-                  text: stringtext,
+                  text: e,
                   toolgenId: proid,
                   openaigenId: openaiGenId,
+                },
+              });
+              const copysupdate = await prisma.copygen.update({
+                where: {
+                  id: copys.id,
+                },
+                data: {
+                  text: {
+                    set: e,
+                  },
                 },
               });
               const addCharCount = await prisma.creadit.create({
@@ -223,9 +250,13 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
           status = "success";
           act = "update";
         }
-        res
-          .status(200)
-          .json({ status, act, proid: proidnew, response: response.data , newVariationsArray});
+        res.status(200).json({
+          status,
+          act,
+          proid: proidnew,
+          response: response.data,
+          newVariationsArray,
+        });
       }
     }
   } catch (error) {

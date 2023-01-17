@@ -9,6 +9,7 @@ const prisma = new PrismaClient();
 
 export default function Copygen({ formattedCopy, emailcopy, toolgen }: any) {
   const router = useRouter();
+  const [isChecked, setIsChecked] = useState(false);
   const [doctitle, setDoctitle] = useState("");
   const [to, setTo] = useState("");
   const [companyname, setCompanyname] = useState("");
@@ -260,12 +261,6 @@ export default function Copygen({ formattedCopy, emailcopy, toolgen }: any) {
     return;
   };
 
-  //make text like pre wrap in function and call it
-  const textLikePreWrap = (text: any) => {
-    //make text text to json
-    return text;
-  };
-
   return (
     <main className="bg-white">
       <div className="flex-1 border-b-2">
@@ -496,13 +491,7 @@ export default function Copygen({ formattedCopy, emailcopy, toolgen }: any) {
                           </div>
                         </div>
                       </div>
-                      <div
-                        className="whitespace-pre-line"
-                        id={`textvalue${item.id}`}
-                        dangerouslySetInnerHTML={{
-                          __html: textLikePreWrap(item.text),
-                        }}
-                      ></div>
+                      <div id={`textvalue${item.id}`}>{item.text}</div>
                       <div className="flex pt-4 justify-items-end justify-between">
                         {/* add time also */}
 
