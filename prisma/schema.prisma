@@ -57,6 +57,7 @@ model User {
     Openaigen          Openaigen[]
     Facebookadsgen     Facebookadsgen[]
     Emailcopy          Emailcopy[]
+    Copygen            Copygen[]
 }
 
 model VerificationToken {
@@ -123,7 +124,9 @@ model Copygen {
     isSaved     String?    @default("false")
     isDeleted   String?    @default("false")
     toolgenId   String
+    userId      String?
     createdAt   DateTime   @default(now())
+    user        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
     openaigen   Openaigen? @relation(fields: [openaigenId], references: [id])
     toolgen     Toolgen    @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
 }
