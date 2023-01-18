@@ -18,9 +18,8 @@ export default function History({ copy }: any) {
 
   const { data: session } = useSession();
   const [searchTerm, setSearchTerm] = React.useState("");
-
   const filteredJobs = copy.filter((job: any) => {
-    return job.id.toLowerCase().includes(searchTerm.toLowerCase());
+    return job.text.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   return (
