@@ -121,6 +121,7 @@ model Copygen {
     text        String?
     openaigenId String?
     isSaved     String?    @default("false")
+    isDeleted   String?    @default("false")
     toolgenId   String
     createdAt   DateTime   @default(now())
     openaigen   Openaigen? @relation(fields: [openaigenId], references: [id])

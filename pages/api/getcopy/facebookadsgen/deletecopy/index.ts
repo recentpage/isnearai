@@ -11,8 +11,13 @@ export default async function handle(
   const { id } = req.body;
   const status = "success";
   const act = "delete";
-  const facebookadsgen = await prisma.copygen.delete({
-    where: { id: id },
+  const facebookadsgen = await prisma.copygen.update({
+    where: {
+      id: id,
+    },
+    data: {
+      isDeleted: "true",
+    },
   });
   if (facebookadsgen) {
     res.json({ status, act });

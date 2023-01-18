@@ -145,8 +145,8 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
                 //calculate char count for each variation and word count for each variation
                 //remove spaces from the start and end of the string
                 e = e.trim();
-                //remove firrst 4 characters from the string using substring
-                e = e.substring(4);
+                //find \n\n and remove it before it chars
+                e = e.substring(3);
                 const charCount: number = e.length;
                 const wordCount: number = e.split(" ").length;
                 const variationcount: number = newVariationsArray.length;
@@ -213,7 +213,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
               //remove spaces from the start and end of the string
               e = e.trim();
               //remove firrst 4 characters from the string using substring
-              e = e.substring(4);
+              e = e.substring(3);
               const charCount: number = e.length;
               const wordCount: number = e.split(" ").length;
               const variationcount: number = newVariationsArray.length;

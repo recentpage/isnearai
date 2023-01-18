@@ -602,6 +602,7 @@ export async function getServerSideProps(context: any) {
       },
       where: {
         toolgenId: proid,
+        isDeleted: "false",
       },
       orderBy: {
         createdAt: "desc",
