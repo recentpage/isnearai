@@ -9,16 +9,60 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export default function History({ copy }: any) {
+export default function History({ copy, deletedCopy, savedCopy }: any) {
   //get base url
   const [baseurl, setBaseurl] = React.useState("");
+  const [Copies, setCopies] = React.useState(copy);
+  const [isclicked, setIsclicked] = React.useState("");
+  console.log("isclicked", isclicked);
   React.useEffect(() => {
     setBaseurl(window.location.origin);
-  }, []);
+    //get isclicked from local storage
+    const isclicked = localStorage.getItem("isclicked");
+    //if isclicked is not present in local storage
+    if (isclicked === null) {
+      localStorage.setItem("isclicked", "all");
+      setIsclicked("all");
+    } else {
+      setIsclicked(isclicked);
+      if (isclicked === "all") {
+        setCopies(copy);
+      }
+      if (isclicked === "saved") {
+        setCopies(savedCopy);
+      }
+      if (isclicked === "deleted") {
+        setCopies(deletedCopy);
+      }
+    }
+  }, [copy, deletedCopy, savedCopy]);
+
+  const AllCopyClicked = () => {
+    setCopies(copy);
+    // save isclicked is saved in local storage
+    localStorage.setItem("isclicked", "all");
+    setIsclicked("all");
+  };
+
+  const SavedCopyClicked = () => {
+    setCopies(savedCopy);
+    //save isclicked is saved in local storage
+    localStorage.setItem("isclicked", "saved");
+    setIsclicked("saved");
+  };
+
+  const DeletedCopyClicked = () => {
+    setCopies(deletedCopy);
+    //save isclicked is saved in local storage
+    localStorage.setItem("isclicked", "deleted");
+    setIsclicked("deleted");
+  };
 
   const { data: session } = useSession();
   const [searchTerm, setSearchTerm] = React.useState("");
-  const filteredJobs = copy.filter((job: any) => {
+  //filter based on isSaved
+
+  const filteredJobs = Copies.filter((job: any) => {
     return job.text.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
@@ -75,7 +119,7 @@ export default function History({ copy }: any) {
                       id="job-search"
                       className="form-input w-full pl-9 focus:border-slate-300"
                       type="search"
-                      placeholder="Search for a space"
+                      placeholder="Search For a History"
                       value={searchTerm}
                       onChange={(event) => setSearchTerm(event.target.value)}
                     />
@@ -99,7 +143,31 @@ export default function History({ copy }: any) {
                 {/* Jobs header */}
                 <div className="flex justify-between items-center mb-4">
                   <div className="text-sm text-slate-500 italic">
-                    Showing Genrations
+                    {/* make two tabs like buttons */}
+                    <button
+                      onClick={() => AllCopyClicked()}
+                      className={`btn to-pink-500 text-gray-900 shadow-lg font-bold ${
+                        isclicked == "all" ? "bg-slate-300" : "bg-lime-200"
+                      }`}
+                    >
+                      All Copies
+                    </button>
+                    <button
+                      onClick={() => SavedCopyClicked()}
+                      className={`btn to-pink-500 text-gray-900 shadow-lg font-bold ${
+                        isclicked == "saved" ? "bg-slate-300" : "bg-lime-200"
+                      } ml-4`}
+                    >
+                      Saved Copies
+                    </button>
+                    <button
+                      onClick={() => DeletedCopyClicked()}
+                      className={`btn to-pink-500 text-gray-900 shadow-lg font-bold ${
+                        isclicked == "deleted" ? "bg-slate-300" : "bg-lime-200"
+                      } ml-4`}
+                    >
+                      Deleted Copies
+                    </button>
                   </div>
                   {/* Sort */}
                   <div className="text-sm"></div>
@@ -117,6 +185,8 @@ export default function History({ copy }: any) {
                         copyname={fields["toolgen"].title}
                         spacename={fields["toolgen"].space.name}
                         createdAt={fields.createdAt}
+                        isSaved={fields.isSaved}
+                        isDeleted={fields.isDeleted}
                       />
                     );
                   })}
@@ -148,11 +218,72 @@ export async function getServerSideProps(context: any) {
   const copy = await prisma.copygen.findMany({
     where: {
       userId: userId,
+      isDeleted: "false",
     },
     select: {
       id: true,
       text: true,
       createdAt: true,
+      isSaved: true,
+      toolgen: {
+        select: {
+          title: true,
+          tool: {
+            select: {
+              name: true,
+            },
+          },
+          space: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  //get isDeleted true
+  const deletedCopy = await prisma.copygen.findMany({
+    where: {
+      userId: userId,
+      isDeleted: "true",
+    },
+    select: {
+      id: true,
+      text: true,
+      createdAt: true,
+      isDeleted: true,
+      toolgen: {
+        select: {
+          title: true,
+          tool: {
+            select: {
+              name: true,
+            },
+          },
+          space: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  //get isSaved true
+  const savedCopy = await prisma.copygen.findMany({
+    where: {
+      userId: userId,
+      isSaved: "true",
+      isDeleted: "false",
+    },
+    select: {
+      id: true,
+      text: true,
+      createdAt: true,
+      isSaved: true,
       toolgen: {
         select: {
           title: true,
@@ -186,9 +317,41 @@ export async function getServerSideProps(context: any) {
     };
   });
 
+  const formetedCopyDeleted = deletedCopy.map((item: any) => {
+    return {
+      ...item,
+      createdAt: new Date(item.createdAt).toLocaleString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+    };
+  });
+
+  const formetedCopySaved = savedCopy.map((item: any) => {
+    return {
+      ...item,
+      createdAt: new Date(item.createdAt).toLocaleString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+    };
+  });
+
   return {
     props: {
       copy: formetedCopy,
+      deletedCopy: formetedCopyDeleted,
+      savedCopy: formetedCopySaved,
     },
   };
 }
