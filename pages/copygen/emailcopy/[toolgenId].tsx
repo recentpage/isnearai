@@ -465,7 +465,7 @@ export default function Copygen({ formattedCopy, emailcopy, toolgen }: any) {
                     key={item.id}
                     className="flex items-start px-8 mb-4 last:mb-0"
                   >
-                    <div className="font-bold text-sm bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white p-3 rounded-lg rounded-tl-none border border-transparent shadow-md mb-1">
+                    <div className="font-bold text-sm bg-gradient-to-r text-gray-500 italic p-4 rounded-lg border border-transparent border-slate-200 shadow-md mb-1">
                       <div id={`text${item.id}`} style={{ display: "none" }}>
                         <div className="flex items-center justify-between">
                           <textarea
@@ -506,7 +506,7 @@ export default function Copygen({ formattedCopy, emailcopy, toolgen }: any) {
                       <div className="flex pt-4 justify-items-end justify-between">
                         {/* add time also */}
 
-                        <div className="flex rounded-sm text-slate-400 justify-center bg-white w-full">
+                        <div className="flex rounded-sm text-slate-800 justify-center bg-yellow-300 w-full">
                           {item.numWords} words / {item.numCharacters}{" "}
                           characters , {item.createdAt}
                         </div>
