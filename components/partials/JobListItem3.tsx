@@ -144,6 +144,20 @@ function JobListItem(props: any) {
       console.error(error);
     }
   };
+
+  // make a feture for copy genration
+  const copyGenration = async (text: any) => {
+    //make text to copy
+    const textToCopy = text;
+    //copy text
+    navigator.clipboard.writeText(textToCopy);
+    toast("Genration copied", {
+      hideProgressBar: true,
+      autoClose: 2000,
+      type: "success",
+    });
+  };
+
   return (
     <div
       className={`shadow-lg rounded-lg border px-5 py-4 ${
@@ -156,7 +170,10 @@ function JobListItem(props: any) {
         {/* Left side */}
         <div className="flex">
           <div className="text-sm text-slate-500 font-bold italic whitespace-wrap">
-            <div className="flex items-center space-x-2 whitespace-pre-line">
+            <div
+              onClick={() => copyGenration(props.text)}
+              className="flex items-center space-x-2 whitespace-pre-line"
+            >
               {props.text}
             </div>
             <div className="text-sm text-slate-500 bg-orange-600 font-bold italic whitespace-wrap rounded-md px-2">
