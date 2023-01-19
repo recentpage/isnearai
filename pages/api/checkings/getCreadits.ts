@@ -39,6 +39,8 @@ export default async function getCredits(userId: string, tool: string) {
     minimumCredits = 400;
   } else if (tool === "emailcopy") {
     minimumCredits = 700;
+  } else if (tool === "trendinginstagramhashtags") {
+    minimumCredits = 200;
   } else {
     minimumCredits = 200;
   }

@@ -9,16 +9,12 @@ const prisma = new PrismaClient();
 
 export default function Copygen({
   formattedCopy,
-  facebookadsgen,
+  instragramhashtags,
   toolgen,
 }: any) {
   const router = useRouter();
-  const [isChecked, setIsChecked] = useState(false);
   const [doctitle, setDoctitle] = useState("");
-  const [productname, setProductname] = useState("");
-  const [productdescription, setProductdescription] = useState("");
-  const [ocassion, setOcassion] = useState("");
-  const [promotion, setPromotion] = useState("");
+  const [imagedescription, setImagedescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState("");
 
@@ -27,19 +23,10 @@ export default function Copygen({
     if (toolgen != null && toolgen[0].title != null && toolgen.length > 0) {
       setDoctitle(toolgen[0].title);
     }
-    if (facebookadsgen != null && facebookadsgen.length > 0) {
-      setProductname(facebookadsgen[0].productname);
-      setProductdescription(facebookadsgen[0].productdescription);
-      setOcassion(facebookadsgen[0].occasion);
-      setPromotion(facebookadsgen[0].promotion);
-      if (facebookadsgen[0].useemoji == "true") {
-        const checkbox = document.getElementById("useemojis");
-        if (checkbox != null) {
-          checkbox.setAttribute("checked", "true");
-        }
-      }
+    if (instragramhashtags != null && instragramhashtags.length > 0) {
+      setImagedescription(instragramhashtags[0].imagedescription);
     }
-  }, [facebookadsgen, toolgen]);
+  }, [instragramhashtags, toolgen]);
 
   // handle doc title
   const handletitle = async (event: any) => {
@@ -54,16 +41,19 @@ export default function Copygen({
       return;
     }
     const title = doctitle;
-    const updatetitle = await fetch("/api/getcopy/facebookadsgen/updatetitle", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        proid: proid,
-        title: title,
-      }),
-    });
+    const updatetitle = await fetch(
+      "/api/getcopy/trendinginstagramhashtags/updatetitle",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          proid: proid,
+          title: title,
+        }),
+      }
+    );
     const data = await updatetitle.json();
     if (data.status == "success" && data.act == "update") {
       toast("Title Updated", {
@@ -80,24 +70,15 @@ export default function Copygen({
     event.preventDefault();
     try {
       const proid = router.query.toolgenId;
-      const productname = event.target.productname.value;
-      const productdescription = event.target.productdescription.value;
-      const ocassion = event.target.ocassion.value;
-      const promotion = event.target.promotion.value;
-      const useemogies = isChecked;
-
-      const response = await fetch("/api/getcopy/facebookadsgen", {
+      const imagedescription = event.target.imagedescription.value;
+      const response = await fetch("/api/getcopy/trendinginstagramhashtags", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           proid: proid,
-          productname: productname,
-          productdescription: productdescription,
-          ocassion: ocassion,
-          promotion: promotion,
-          useemogies: useemogies,
+          imagedescription: imagedescription,
         }),
       });
       console.log(response);
@@ -120,9 +101,9 @@ export default function Copygen({
           type: "success",
         });
         if (data.act == "update") {
-          router.push("/copygen/facebookadsgen/" + proid);
+          router.push("/copygen/trendinginstagramhashtags/" + proid);
         } else {
-          router.push("/copygen/facebookadsgen/" + data.proid);
+          router.push("/copygen/trendinginstagramhashtags/" + data.proid);
         }
         return;
       }
@@ -155,16 +136,19 @@ export default function Copygen({
 
   // save copy to fav
   const saveCopyToFav = async (id: any, isSaved: any) => {
-    const response = await fetch("/api/getcopy/facebookadsgen/savecopytofav", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: id,
-        isSaved: isSaved,
-      }),
-    });
+    const response = await fetch(
+      "/api/getcopy/trendinginstagramhashtags/savecopytofav",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: id,
+          isSaved: isSaved,
+        }),
+      }
+    );
     const data = await response.json();
     if (data.status == "success" && data.act == "save") {
       toast("Copy Marked As Fav", {
@@ -198,17 +182,20 @@ export default function Copygen({
     const copy = edit;
     const proid = router.query.toolgenId;
     if (edit) {
-      const response = await fetch("/api/getcopy/facebookadsgen/editcopy", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          proid: proid,
-          id: id,
-          copy: copy,
-        }),
-      });
+      const response = await fetch(
+        "/api/getcopy/trendinginstagramhashtags/editcopy",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            proid: proid,
+            id: id,
+            copy: copy,
+          }),
+        }
+      );
       const data = await response.json();
       if (data.status == "success" && data.act == "update") {
         toast("Copy Saved", {
@@ -247,15 +234,18 @@ export default function Copygen({
     if (!confirm) {
       return;
     }
-    const response = await fetch("/api/getcopy/facebookadsgen/deletecopy", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: id,
-      }),
-    });
+    const response = await fetch(
+      "/api/getcopy/trendinginstagramhashtags/deletecopy",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: id,
+        }),
+      }
+    );
     const data = await response.json();
     if (data.status == "success" && data.act == "delete") {
       toast("Copy Deleted", {
@@ -267,6 +257,12 @@ export default function Copygen({
       router.replace(router.asPath);
     }
     return;
+  };
+
+  //make text like pre wrap in function and call it
+  const textLikePreWrap = (text: any) => {
+    //make text text to json
+    return text;
   };
 
   return (
@@ -347,96 +343,20 @@ export default function Copygen({
                     <div>
                       <label
                         className="block text-sm font-medium mb-1"
-                        htmlFor="productname"
+                        htmlFor="imagedescription"
                       >
-                        Product/Service Name
-                        <span className="text-rose-500">*</span>
-                      </label>
-                      <input
-                        id="productname"
-                        name="productname"
-                        className="form-input w-full"
-                        type="text"
-                        value={productname}
-                        onChange={(e) => setProductname(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label
-                        className="block text-sm font-medium mb-1"
-                        htmlFor="productdescription"
-                      >
-                        Product/Service Description
+                        Image Description
                         <span className="text-rose-500">*</span>
                       </label>
                       <textarea
-                        id="productdescription"
-                        name="productdescription"
-                        defaultValue={productdescription}
+                        id="imagedescription"
+                        name="imagedescription"
+                        defaultValue={imagedescription}
                         className="form-input w-full"
                         rows={4}
                         cols={4}
-                        onChange={(e) => setProductdescription(e.target.value)}
+                        onChange={(e) => setImagedescription(e.target.value)}
                       ></textarea>
-                    </div>
-                    <div>
-                      <label
-                        className="block text-sm font-medium mb-1"
-                        htmlFor="ocassion"
-                      >
-                        Ocassion
-                        <span className="text-rose-500">*</span>
-                      </label>
-                      <input
-                        id="ocassion"
-                        name="ocaassion"
-                        className="form-input w-full"
-                        type="text"
-                        value={ocassion}
-                        onChange={(e) => setOcassion(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label
-                        className="block text-sm font-medium mb-1"
-                        htmlFor="promotion"
-                      >
-                        Promotion
-                        <span className="text-rose-500">*</span>
-                      </label>
-                      <input
-                        id="promotion"
-                        name="promotion"
-                        className="form-input w-full"
-                        type="text"
-                        value={promotion}
-                        onChange={(e) => setPromotion(e.target.value)}
-                      />
-                    </div>
-                    {/* make toggel button for useemogies */}
-                    <div>
-                      <div className="relative">
-                        <label
-                          htmlFor="toggle-button"
-                          className="cursor-pointer flex"
-                        >
-                          <span className="text-gray-900">
-                            Use emojis in every copy
-                          </span>
-                          <div className="ml-auto">
-                            <input
-                              type="checkbox"
-                              value=""
-                              className="form-input w-10 h-6 bg-gray-200 rounded-full focus:outline-none focus:ring-blue-300"
-                              id="useemojis"
-                              name="useemojis"
-                              aria-label="Toggle button to enable emojis in every copy"
-                              onChange={() => setIsChecked(!isChecked)}
-                            />
-                            <div className="w-6 h-6 bg-white rounded-full absolute top-0 left-0 transform -translate-x-full"></div>
-                          </div>
-                        </label>
-                      </div>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
@@ -445,7 +365,7 @@ export default function Copygen({
                       accessKey="j"
                       className="font-bold rounded-xl text-xl btn bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-pink-500 hover:to-blue-500 text-white ml-auto w-full"
                     >
-                      {loading ? "Loading..." : "Generate Copy"}
+                      {loading ? "Loading..." : "Generate Hashtags"}
                     </button>
                   </div>
                 </form>
@@ -465,7 +385,7 @@ export default function Copygen({
                     key={item.id}
                     className="flex items-start px-8 mb-4 last:mb-0"
                   >
-                    <div className="font-bold text-sm text-gray-500 italic p-4 rounded-lg border border-transparent shadow-md mb-1 border-slate-200">
+                    <div className="font-bold text-sm bg-gradient-to-r text-gray-500 italic p-4 rounded-lg border border-transparent border-slate-200 shadow-md mb-1">
                       <div id={`text${item.id}`} style={{ display: "none" }}>
                         <div className="flex items-center justify-between">
                           <textarea
@@ -496,7 +416,9 @@ export default function Copygen({
                           </div>
                         </div>
                       </div>
-                      <div id={`textvalue${item.id}`}>{item.text}</div>
+                      <div id={`textvalue${item.id}`}>
+                        {textLikePreWrap(item.text)}
+                      </div>
                       <div className="flex pt-4 justify-items-end justify-between">
                         {/* add time also */}
 
@@ -618,14 +540,10 @@ export async function getServerSideProps(context: any) {
     });
 
     // get product description data from prisma
-    const facebookadsgen = await prisma.facebookadsgen.findMany({
+    const instragramhashtags = await prisma.trendinginstagramhashtags.findMany({
       select: {
         id: true,
-        productname: true,
-        productdescription: true,
-        occasion: true,
-        promotion: true,
-        useemoji: true,
+        imagedescription: true,
       },
       where: {
         toolgenId: proid,
@@ -673,7 +591,7 @@ export async function getServerSideProps(context: any) {
     return {
       props: {
         formattedCopy,
-        facebookadsgen,
+        instragramhashtags,
         toolgen,
       },
     };

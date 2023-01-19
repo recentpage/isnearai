@@ -147,6 +147,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
                     text: e,
                     toolgenId: toolgen.id,
                     openaigenId: openaiGenId,
+                    userId: userId,
                   },
                 });
                 const addCharCount = await prisma.creadit.create({
@@ -198,6 +199,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
                   text: e,
                   toolgenId: proid,
                   openaigenId: openaiGenId,
+                  userId: userId,
                 },
               });
               const addCharCount = await prisma.creadit.create({

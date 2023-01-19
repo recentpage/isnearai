@@ -155,6 +155,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
                     text: e,
                     toolgenId: toolgen.id,
                     openaigenId: openaiGenId,
+                    userId: userId,
                   },
                 });
                 const copysupdate = await prisma.copygen.update({
@@ -222,6 +223,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
                   text: e,
                   toolgenId: proid,
                   openaigenId: openaiGenId,
+                  userId: userId,
                 },
               });
               const copysupdate = await prisma.copygen.update({

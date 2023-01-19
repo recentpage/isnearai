@@ -35,29 +35,30 @@ model Session {
 }
 
 model User {
-    id                 String               @id @default(cuid())
-    name               String?
-    email              String?              @unique
-    emailVerified      DateTime?
-    image              String?
-    stripeId           String?              @unique
-    isSubscribed       String?              @default("false")
-    interval           String?
-    credits            Int?                 @default(0)
-    bonuscredits       Int?                 @default(1500)
-    planstartdate      String?
-    planenddate        String?
-    accounts           Account[]
-    sessions           Session[]
-    Space              Space[]
-    Tools              Tools[]
-    Toolgen            Toolgen[]
-    Productdescription Productdescription[]
-    Creadit            Creadit[]
-    Openaigen          Openaigen[]
-    Facebookadsgen     Facebookadsgen[]
-    Emailcopy          Emailcopy[]
-    Copygen            Copygen[]
+    id                        String                      @id @default(cuid())
+    name                      String?
+    email                     String?                     @unique
+    emailVerified             DateTime?
+    image                     String?
+    stripeId                  String?                     @unique
+    isSubscribed              String?                     @default("false")
+    interval                  String?
+    credits                   Int?                        @default(0)
+    bonuscredits              Int?                        @default(1500)
+    planstartdate             String?
+    planenddate               String?
+    accounts                  Account[]
+    sessions                  Session[]
+    Space                     Space[]
+    Tools                     Tools[]
+    Toolgen                   Toolgen[]
+    Productdescription        Productdescription[]
+    Creadit                   Creadit[]
+    Openaigen                 Openaigen[]
+    Facebookadsgen            Facebookadsgen[]
+    Emailcopy                 Emailcopy[]
+    Copygen                   Copygen[]
+    Trendinginstagramhashtags Trendinginstagramhashtags[]
 }
 
 model VerificationToken {
@@ -98,23 +99,24 @@ model Tools {
 }
 
 model Toolgen {
-    id                 String               @id @default(cuid())
-    title              String?
-    slug               String?
-    isSaved            String?              @default("false")
-    toolId             String
-    spaceId            String
-    userId             String
-    createdAt          DateTime             @default(now())
-    tool               Tools                @relation(fields: [toolId], references: [id], onDelete: Cascade)
-    space              Space                @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-    user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-    Copygen            Copygen[]
-    Productdescription Productdescription[]
-    Creadit            Creadit[]
-    Openaigen          Openaigen[]
-    Facebookadsgen     Facebookadsgen?
-    Emailcopy          Emailcopy[]
+    id                        String                     @id @default(cuid())
+    title                     String?
+    slug                      String?
+    isSaved                   String?                    @default("false")
+    toolId                    String
+    spaceId                   String
+    userId                    String
+    createdAt                 DateTime                   @default(now())
+    tool                      Tools                      @relation(fields: [toolId], references: [id], onDelete: Cascade)
+    space                     Space                      @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+    user                      User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    Copygen                   Copygen[]
+    Productdescription        Productdescription[]
+    Creadit                   Creadit[]
+    Openaigen                 Openaigen[]
+    Facebookadsgen            Facebookadsgen?
+    Emailcopy                 Emailcopy[]
+    Trendinginstagramhashtags Trendinginstagramhashtags?
 }
 
 model Copygen {
@@ -169,6 +171,16 @@ model Emailcopy {
     createdAt   DateTime @default(now())
     toolgen     Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
     user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Trendinginstagramhashtags {
+    id               String   @id @default(cuid())
+    imagedescription String?
+    toolgenId        String   @unique
+    userId           String
+    createdAt        DateTime @default(now())
+    toolgen          Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
+    user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Creadit {
