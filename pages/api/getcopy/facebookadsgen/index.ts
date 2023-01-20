@@ -16,7 +16,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   //@ts-ignore
   const userId = session.user?.id;
-  const toolId = "clcuezw6j0000v63wg95k3l88";
+  const toolId = "cld4hqi440001v6tkoy1o30l7";
   let {
     proid,
     productname,

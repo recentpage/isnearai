@@ -16,8 +16,8 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   //@ts-ignore
   const userId = session.user?.id;
-  const toolId = "cld4hp4rn0000v6tkpdfrufic";
-  const { proid, toneofvoice, productname, productcharacteristics } = req.body;
+  const toolId = "cld4huxj70006v6tkw3hcsycf";
+  const { proid, toneofvoice, topic, targetkeywords } = req.body;
 
   //get space id from pages/api/checkspace.ts import
   const spaceId = await checkSpace(userId);
@@ -33,11 +33,13 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
     apiKey: process.env.OPENAI_API_KEY,
   });
   const api = new OpenAIApi(configuration);
-  const prompt = `Generate a product description for a product with the following attributes: product name = '${productname}', product description = '${productcharacteristics}'. Make sure to include details about the product's features and benefits.use Tone of voice = '${toneofvoice}'. genrate 3 variations of the product description.`;
+  // const prompt = `Generate a product description for a product with the following attributes: product name = '${productname}', product description = '${productcharacteristics}'. Make sure to include details about the product's features and benefits.use Tone of voice = '${toneofvoice}'. genrate 3 variations of the product description.`;
   // console.log(prompt);
+
+  const prompt = `Generate a paragraph with the following attributes: topic = '${topic}', target keywords = '${targetkeywords}'. Use Tone of voice = '${toneofvoice}'. genrate 3 variations of the paragraph.`;
   try {
     //check if the user has enough credits to generate the product description if not return error
-    const checkCredits = await getCredits(userId, "productdescription");
+    const checkCredits = await getCredits(userId, "paragraphwriter");
     if (!checkCredits) {
       res
         .status(401)
@@ -47,7 +49,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
       const response = await api.createCompletion({
         model: "text-davinci-003",
         prompt: prompt,
-        max_tokens: 270,
+        max_tokens: 600,
         temperature: 0,
       });
 
@@ -103,7 +105,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
               userId: userId,
             },
           });
-          if (toolgen.id && productname && productcharacteristics) {
+          if (toolgen.id && topic && targetkeywords) {
             // upadte the slug
             const updateSlug = await prisma.toolgen.update({
               where: {
@@ -114,16 +116,15 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
                 slug: newSlug + "/" + toolgen.id,
               },
             });
-            const addProductdescription =
-              await prisma.productdescription.create({
-                data: {
-                  productname: productname,
-                  productcharacteristics: productcharacteristics,
-                  toneofvoice: toneofvoice,
-                  toolgenId: toolgen.id,
-                  userId: userId,
-                },
-              });
+            const addProductdescription = await prisma.paragraphwriter.create({
+              data: {
+                topic: topic,
+                targetkeywords: targetkeywords,
+                toneofvoice: toneofvoice,
+                toolgenId: toolgen.id,
+                userId: userId,
+              },
+            });
           }
 
           if (toolgen.id) {
@@ -168,13 +169,13 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
           act = "create";
           proidnew = toolgen.id.toString();
         } else {
-          const addProductdescription = await prisma.productdescription.update({
+          const addProductdescription = await prisma.paragraphwriter.update({
             where: {
               toolgenId: proid,
             },
             data: {
-              productname: productname,
-              productcharacteristics: productcharacteristics,
+              topic: topic,
+              targetkeywords: targetkeywords,
               toneofvoice: toneofvoice,
             },
           });

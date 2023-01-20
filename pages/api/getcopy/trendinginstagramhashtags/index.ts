@@ -16,7 +16,7 @@ const openai = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   //@ts-ignore
   const userId = session.user?.id;
-  const toolId = "cld2si5wm0000v6883ez8q8n4";
+  const toolId = "cld4ht3ua0002v6tk08qe32e6";
   const { proid, imagedescription } = req.body;
 
   //get space id from pages/api/checkspace.ts import
