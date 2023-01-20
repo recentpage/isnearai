@@ -60,6 +60,7 @@ model User {
     Copygen                   Copygen[]
     Trendinginstagramhashtags Trendinginstagramhashtags[]
     Paragraphwriter           Paragraphwriter[]
+    Instagramcaptions         Instagramcaptions[]
 }
 
 model VerificationToken {
@@ -119,6 +120,7 @@ model Toolgen {
     Emailcopy                 Emailcopy[]
     Trendinginstagramhashtags Trendinginstagramhashtags?
     Paragraphwriter           Paragraphwriter[]
+    Instagramcaptions         Instagramcaptions?
 }
 
 model Copygen {
@@ -195,6 +197,17 @@ model Paragraphwriter {
     createdAt      DateTime @default(now())
     toolgen        Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
     user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Instagramcaptions {
+    id          String   @id @default(cuid())
+    description String?
+    toneofvoice String?
+    toolgenId   String   @unique
+    userId      String
+    createdAt   DateTime @default(now())
+    toolgen     Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
+    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Creadit {
