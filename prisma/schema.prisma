@@ -61,6 +61,7 @@ model User {
     Trendinginstagramhashtags Trendinginstagramhashtags[]
     Paragraphwriter           Paragraphwriter[]
     Instagramcaptions         Instagramcaptions[]
+    Amazonproductdescription  Amazonproductdescription[]
 }
 
 model VerificationToken {
@@ -121,6 +122,7 @@ model Toolgen {
     Trendinginstagramhashtags Trendinginstagramhashtags?
     Paragraphwriter           Paragraphwriter[]
     Instagramcaptions         Instagramcaptions?
+    Amazonproductdescription  Amazonproductdescription?
 }
 
 model Copygen {
@@ -208,6 +210,17 @@ model Instagramcaptions {
     createdAt   DateTime @default(now())
     toolgen     Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
     user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Amazonproductdescription {
+    id               String   @id @default(cuid())
+    productname      String?
+    shortdescription String?
+    toolgenId        String   @unique
+    userId           String
+    createdAt        DateTime @default(now())
+    toolgen          Toolgen  @relation(fields: [toolgenId], references: [id], onDelete: Cascade)
+    user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Creadit {
