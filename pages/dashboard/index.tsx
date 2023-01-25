@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Navbar/Header";
 import Pricing from "../../components/partials/Pricing";
 import Welcomeuser from "../../components/partials/Welcomeuser";
@@ -7,7 +7,7 @@ import initStripe from "stripe";
 import { useSession } from "next-auth/react";
 
 export default function Dashoard({ sortedPlans }: { sortedPlans: any }) {
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [plancreadits, setPlancreadits] = React.useState(0);
   const [bonuscreadits, setBonuscreadits] = React.useState(0);
   const [totalcreadits, setTotalcreadits] = React.useState(0);
