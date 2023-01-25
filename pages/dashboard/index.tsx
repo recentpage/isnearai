@@ -7,6 +7,7 @@ import initStripe from "stripe";
 import { useSession } from "next-auth/react";
 
 export default function Dashoard({ sortedPlans }: { sortedPlans: any }) {
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [plancreadits, setPlancreadits] = React.useState(0);
   const [bonuscreadits, setBonuscreadits] = React.useState(0);
   const [totalcreadits, setTotalcreadits] = React.useState(0);
@@ -36,9 +37,9 @@ export default function Dashoard({ sortedPlans }: { sortedPlans: any }) {
   } else if (session.status === "authenticated") {
     return (
       <div className="flex h-screen overflow-hidden">
-        <Sidebar />
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-          <Header />
+          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <main>
             <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
               <Welcomeuser />
