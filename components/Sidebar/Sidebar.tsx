@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import SidebarLinkGroup from "./SidebarLinkGroup";
-
 export default function Sidebar({ sidebarOpen, setSidebarOpen }: any) {
   const location = useRouter();
   const { pathname } = location;
