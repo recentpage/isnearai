@@ -18,6 +18,7 @@ export default function Genrations({
 }) {
   const router = useRouter();
   //get base url
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [baseurl, setBaseurl] = React.useState("");
   React.useEffect(() => {
     setBaseurl(window.location.origin);
@@ -40,12 +41,12 @@ export default function Genrations({
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         {/*  Site header */}
-        <Header />
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main>
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
             {/* Page header */}

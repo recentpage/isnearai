@@ -7,6 +7,7 @@ import { PrismaClient } from "@prisma/client";
 export default function Tools({ alltools }: any) {
   const [searchTerm, setSearchTerm] = useState("");
   const [baseUrl, setBaseUrl] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   //get base url
   useEffect(() => {
     const url = window.location.href;
@@ -30,7 +31,7 @@ export default function Tools({ alltools }: any) {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar />
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         <main>
           {/* Search area */}
