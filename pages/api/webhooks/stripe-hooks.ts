@@ -15,7 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //@ts-ignore
   const stripe = initStripe(process.env.STRIPE_SECRET_KEY);
   const sig = req.headers["stripe-signature"];
-  const signingSecret = "whsec_aWZT4Fn41UEWC8ZLU79FY5nHO4MzzrCp";
+  const signingSecret = "whsec_ST7rc3GtfhFtld0kLbtkYUWpKXDzFuQ2";
   const buf = await buffer(req);
 
   let event: any;
