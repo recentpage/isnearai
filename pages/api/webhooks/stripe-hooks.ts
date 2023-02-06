@@ -114,8 +114,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             isSubscribed: "true",
             interval: event.data.object.plan.interval,
             credits: creditsToAdd,
-            planstartdate: planStartDate as string,
-            planenddate: planEndDate as string,
+            planstartdate: planStartDateString,
+            planenddate: planEndDateString,
           },
         })
         .catch((err) => {
