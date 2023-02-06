@@ -38,6 +38,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //get plan end date
   const planEndDate = subscription.current_period_end;
 
+  //convert both dates to string format
+  const planStartDateString = planStartDate.toString();
+  const planEndDateString = planEndDate.toString();
+
   let creditsToAdd = 0;
   if (subscription.plan.id === "price_1MOeBVSFU8Udq9IAUs1A2yH8") {
     if (subscription.plan.interval === "month") {
@@ -76,8 +80,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             isSubscribed: "true",
             interval: event.data.object.plan.interval,
             credits: creditsToAdd,
-            planstartdate: planStartDate as string,
-            planenddate: planEndDate as string,
+            planstartdate: planStartDateString,
+            planenddate: planEndDateString,
           },
         })
         .catch((err) => {
